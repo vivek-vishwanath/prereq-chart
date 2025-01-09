@@ -1,0 +1,62 @@
+{
+  "courses": [
+    {
+      "id": "CS101",
+      "name": "Intro to CS",
+      "x": 100,
+      "y": 100
+    },
+    {
+      "id": "CS201",
+      "name": "Data Structures",
+      "x": 300,
+      "y": 100
+    },
+    {
+      "id": "CS202",
+      "name": "Algorithms",
+      "x": 500,
+      "y": 100
+    },
+    {
+      "id": "MATH101",
+      "name": "Calculus I",
+      "x": 100,
+      "y": 250
+    },
+    {
+      "id": "MATH201",
+      "name": "Calculus II",
+      "x": 300,
+      "y": 250
+    },
+    {
+      "id": "CS301",
+      "name": "Systems Programming",
+      "x": 500,
+      "y": 250
+    }
+  ],
+  "prereqs": [
+    {
+      "from": "CS101",
+      "to": "CS201"
+    },
+    {
+      "from": "CS201",
+      "to": "CS202"
+    },
+    {
+      "from": "MATH101",
+      "to": "MATH201"
+    },
+    {
+      "from": "CS201",
+      "to": "CS301"
+    },
+    {
+      "from": "MATH201",
+      "to": "CS301"
+    }
+  ]
+}
