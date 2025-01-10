@@ -1,25 +1,25 @@
 {
   "courses": [
     {
-      "id": "CS101",
+      "id": "CS 1301",
       "name": "Intro to CS",
       "x": 100,
       "y": 100
     },
     {
-      "id": "CS201",
+      "id": "CS 1331",
       "name": "Data Structures",
       "x": 300,
       "y": 100
     },
     {
-      "id": "CS202",
+      "id": "CS 1332",
       "name": "Algorithms",
       "x": 500,
       "y": 100
     },
     {
-      "id": "MATH101",
+      "id": "CS 2110",
       "name": "Calculus I",
       "x": 100,
       "y": 250

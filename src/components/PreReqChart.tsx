@@ -1,9 +1,25 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import data from "../../data/course.json";
+import { fetchCourseData } from '@/lib/api';
+import type { CourseEnrollmentData } from '@/lib/api';
+import { prefetchAllCourseData, type PrefetchedData } from '@/lib/prefetch';
 
 const { courses, prereqs } = data;
+
+interface Point {
+  x: number;
+  y: number;
+}
+
+interface Course {
+  id: string;
+  name: string;
+  x: number;
+  y: number;
+}
 
 const PreReqChart = () => {
   const BOX_WIDTH = 120;
@@ -16,9 +32,54 @@ const PreReqChart = () => {
   const [transform, setTransform] = useState({ x: 0, y: 0, scale: 1 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const svgRef = useRef(null);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [enrollmentData, setEnrollmentData] = useState<CourseEnrollmentData | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
+  const [prefetchedData, setPrefetchedData] = useState<PrefetchedData | null>(null);
 
-  const createPath = (start, end) => {
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        handleClosePopup();
+      }
+    }
+
+    if (selectedCourse) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [selectedCourse]);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        // Try to load from local storage first
+        const cached = localStorage.getItem('prefetchedData');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Date.now() - parsed.timestamp < 24 * 60 * 60 * 1000) { // 24 hours
+            setPrefetchedData(parsed);
+            return;
+          }
+        }
+
+        // If no cache or expired, fetch new data
+        const newData = await prefetchAllCourseData(courses);
+        setPrefetchedData(newData);
+        localStorage.setItem('prefetchedData', JSON.stringify(newData));
+      } catch (error) {
+        console.error('Error prefetching data:', error);
+      }
+    }
+
+    loadData();
+  }, []);
+
+  const createPath = (start: Point, end: Point) => {
     if (start.y === end.y) {
       return `M ${start.x + BOX_WIDTH / 2} ${start.y} 
               L ${end.x - BOX_WIDTH / 2} ${end.y}`;
@@ -36,7 +97,7 @@ const PreReqChart = () => {
             h ${thirdDistance}`;
   };
 
-  const handleMouseDown = (e) => {
+  const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 0) {
       setIsDragging(true);
       setDragStart({
@@ -46,7 +107,7 @@ const PreReqChart = () => {
     }
   };
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (e: React.MouseEvent) => {
     if (isDragging) {
       setTransform((prev) => ({
         ...prev,
@@ -60,146 +121,193 @@ const PreReqChart = () => {
     setIsDragging(false);
   };
 
-  const handleWheel = (e) => {
+  const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
     const delta = -Math.sign(e.deltaY) * ZOOM_STEP;
     const newScale = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, transform.scale + delta));
 
-    // Calculate cursor position relative to SVG
-    const rect = svgRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    if (svgRef.current) {
+      const rect = svgRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
-    // Calculate new position to zoom towards cursor
-    setTransform((prev) => ({
-      scale: newScale,
-      x: x - (x - prev.x) * (newScale / prev.scale),
-      y: y - (y - prev.y) * (newScale / prev.scale)
-    }));
+      setTransform((prev) => ({
+        scale: newScale,
+        x: x - (x - prev.x) * (newScale / prev.scale),
+        y: y - (y - prev.y) * (newScale / prev.scale)
+      }));
+    }
   };
 
-  const handleZoomIn = () => {
-    setTransform((prev) => ({
-      ...prev,
-      scale: Math.min(MAX_ZOOM, prev.scale + ZOOM_STEP)
-    }));
+  const handleCourseClick = async (course: Course) => {
+    setSelectedCourse(course);
+    setIsLoading(true);
+    try {
+      let data;
+      if (prefetchedData?.courses[course.id]) {
+        data = prefetchedData.courses[course.id];
+      } else {
+        data = await fetchCourseData(course.id);
+      }
+      setEnrollmentData(data);
+    } catch (error) {
+      console.error('Error fetching enrollment data:', error);
+      setEnrollmentData(null);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleZoomOut = () => {
-    setTransform((prev) => ({
-      ...prev,
-      scale: Math.max(MIN_ZOOM, prev.scale - ZOOM_STEP)
-    }));
-  };
-
-  const handleReset = () => {
-    setTransform({ x: 0, y: 0, scale: 1 });
+  const handleClosePopup = () => {
+    setSelectedCourse(null);
+    setEnrollmentData(null);
   };
 
   return (
-      <div className="fixed inset-0 bg-gray-50">
-        <div className="absolute top-4 left-4 flex gap-2 z-10">
-          <button
-              onClick={handleZoomOut}
-              className="p-2 bg-white shadow rounded hover:bg-gray-100"
-          >
-            Zoom Out
-          </button>
-          <button
-              onClick={handleZoomIn}
-              className="p-2 bg-white shadow rounded hover:bg-gray-100"
-          >
-            Zoom In
-          </button>
-          <button
-              onClick={handleReset}
-              className="p-2 bg-white shadow rounded hover:bg-gray-100"
-          >
-            Reset
-          </button>
+    <div className="fixed inset-0 bg-gray-50">
+      {!prefetchedData && (
+        <div className="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading course data...</p>
+          </div>
         </div>
-        <svg
-            ref={svgRef}
-            width="100%"
-            height="100%"
-            className="absolute inset-0 cursor-grab touch-none"
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            onWheel={handleWheel}
+      )}
+      <div className="absolute top-4 left-4 flex gap-2 z-10">
+        <button
+          onClick={() => setTransform(prev => ({ ...prev, scale: Math.max(MIN_ZOOM, prev.scale - ZOOM_STEP) }))}
+          className="p-2 bg-white shadow rounded hover:bg-gray-100"
         >
-          <g transform={`translate(${transform.x}, ${transform.y}) scale(${transform.scale})`}>
-            {/* Define arrow marker */}
-            <defs>
-              <marker
-                  id="arrowhead"
-                  markerWidth="12"
-                  markerHeight="8"
-                  refX="10"
-                  refY="4"
-                  orient="auto"
-                  markerUnits="userSpaceOnUse"
-              >
-                <path d="M0,0 L12,4 L0,8 L3,4 Z" fill="#666" />
-              </marker>
-            </defs>
-
-            {/* Draw arrows */}
-            {prereqs.map((prereq, index) => {
-              const fromCourse = courses.find((c) => c.id === prereq.from);
-              const toCourse = courses.find((c) => c.id === prereq.to);
-
-              return (
-                  <path
-                      key={`arrow-${index}`}
-                      d={createPath(fromCourse, toCourse)}
-                      fill="none"
-                      stroke="#666"
-                      strokeWidth="2"
-                      markerEnd="url(#arrowhead)"
-                  />
-              );
-            })}
-
-            {/* Draw course boxes */}
-            {courses.map((course) => (
-                <g key={course.id}>
-                  <rect
-                      x={course.x - BOX_WIDTH / 2}
-                      y={course.y - BOX_HEIGHT / 2}
-                      width={BOX_WIDTH}
-                      height={BOX_HEIGHT}
-                      rx={CORNER_RADIUS}
-                      ry={CORNER_RADIUS}
-                      fill="white"
-                      stroke="#333"
-                      strokeWidth="2"
-                      className="cursor-pointer hover:fill-blue-50 transition-colors"
-                  />
-
-                  <text
-                      x={course.x}
-                      y={course.y - 10}
-                      textAnchor="middle"
-                      className="text-sm font-bold"
-                  >
-                    {course.id}
-                  </text>
-
-                  <text
-                      x={course.x}
-                      y={course.y + 12}
-                      textAnchor="middle"
-                      className="text-xs"
-                  >
-                    {course.name}
-                  </text>
-                </g>
-            ))}
-          </g>
-        </svg>
+          Zoom Out
+        </button>
+        <button
+          onClick={() => setTransform(prev => ({ ...prev, scale: Math.min(MAX_ZOOM, prev.scale + ZOOM_STEP) }))}
+          className="p-2 bg-white shadow rounded hover:bg-gray-100"
+        >
+          Zoom In
+        </button>
+        <button
+          onClick={() => setTransform({ x: 0, y: 0, scale: 1 })}
+          className="p-2 bg-white shadow rounded hover:bg-gray-100"
+        >
+          Reset
+        </button>
       </div>
+
+      {selectedCourse && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+          <Card className="w-[500px]" ref={popupRef}>
+            <CardHeader>
+              <CardTitle>{selectedCourse.id} - {selectedCourse.name}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {isLoading ? (
+                <div className="flex justify-center items-center py-8">
+                  <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
+                </div>
+              ) : enrollmentData ? (
+                <div className="space-y-2">
+                  <p>Current Semester Students Enrolled: {enrollmentData.currentEnrollment}</p>
+                  <p>Current Semester Maximum Capacity: {enrollmentData.currentCapacity}</p>
+                  <p>Previous Semester Students Enrolled: {enrollmentData.pastEnrollment}</p>
+                  <p>Previous Semester Maximum Capacity: {enrollmentData.pastCapacity}</p>
+                </div>
+              ) : (
+                <p className="text-red-500">Error loading course data</p>
+              )}
+              <button
+                onClick={handleClosePopup}
+                className="mt-4 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded"
+              >
+                Close
+              </button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      <svg
+        ref={svgRef}
+        width="100%"
+        height="100%"
+        className="absolute inset-0 cursor-grab touch-none"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onWheel={handleWheel}
+      >
+        <g transform={`translate(${transform.x}, ${transform.y}) scale(${transform.scale})`}>
+          <defs>
+            <marker
+              id="arrowhead"
+              markerWidth="12"
+              markerHeight="8"
+              refX="10"
+              refY="4"
+              orient="auto"
+              markerUnits="userSpaceOnUse"
+            >
+              <path d="M0,0 L12,4 L0,8 L3,4 Z" fill="#666" />
+            </marker>
+          </defs>
+
+          {prereqs.map((prereq, index) => {
+            const fromCourse = courses.find((c) => c.id === prereq.from);
+            const toCourse = courses.find((c) => c.id === prereq.to);
+
+            if (fromCourse && toCourse) {
+              return (
+                <path
+                  key={`arrow-${index}`}
+                  d={createPath(fromCourse, toCourse)}
+                  fill="none"
+                  stroke="#666"
+                  strokeWidth="2"
+                  markerEnd="url(#arrowhead)"
+                />
+              );
+            }
+            return null;
+          })}
+
+          {courses.map((course) => (
+            <g key={course.id} onClick={() => handleCourseClick(course)}>
+              <rect
+                x={course.x - BOX_WIDTH / 2}
+                y={course.y - BOX_HEIGHT / 2}
+                width={BOX_WIDTH}
+                height={BOX_HEIGHT}
+                rx={CORNER_RADIUS}
+                ry={CORNER_RADIUS}
+                fill="white"
+                stroke="#333"
+                strokeWidth="2"
+                className="cursor-pointer hover:fill-blue-50 transition-colors"
+              />
+
+              <text
+                x={course.x}
+                y={course.y - 10}
+                textAnchor="middle"
+                className="text-sm font-bold"
+              >
+                {course.id}
+              </text>
+
+              <text
+                x={course.x}
+                y={course.y + 12}
+                textAnchor="middle"
+                className="text-xs"
+              >
+                {course.name}
+              </text>
+            </g>
+          ))}
+        </g>
+      </svg>
+    </div>
   );
 };
 
