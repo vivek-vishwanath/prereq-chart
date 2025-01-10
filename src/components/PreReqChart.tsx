@@ -35,9 +35,12 @@ const PreReqChart = () => {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [enrollmentData, setEnrollmentData] = useState<CourseEnrollmentData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPrefetching, setIsPrefetching] = useState(true);
+  const [prefetchProgress, setPrefetchProgress] = useState(0);
   const svgRef = useRef<SVGSVGElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
   const [prefetchedData, setPrefetchedData] = useState<PrefetchedData | null>(null);
+  const [prefetchErrors, setPrefetchErrors] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -57,22 +60,73 @@ const PreReqChart = () => {
   useEffect(() => {
     async function loadData() {
       try {
+        setIsPrefetching(true);
+        setPrefetchProgress(0);
+        
         // Try to load from local storage first
         const cached = localStorage.getItem('prefetchedData');
+        let existingData: PrefetchedData | null = null;
+        
         if (cached) {
           const parsed = JSON.parse(cached);
           if (Date.now() - parsed.timestamp < 24 * 60 * 60 * 1000) { // 24 hours
-            setPrefetchedData(parsed);
-            return;
+            existingData = parsed;
+            // Don't return early, check if we need to fetch missing courses
           }
         }
 
-        // If no cache or expired, fetch new data
-        const newData = await prefetchAllCourseData(courses);
-        setPrefetchedData(newData);
-        localStorage.setItem('prefetchedData', JSON.stringify(newData));
+        // Get list of courses that need fetching
+        const coursesToFetch = courses.filter(course => 
+          !existingData?.courses[course.id]
+        );
+
+        if (coursesToFetch.length === 0 && existingData) {
+          setPrefetchedData(existingData);
+          setPrefetchProgress(100);
+          return;
+        }
+
+        // If we have existing data, start with that
+        const newData: PrefetchedData = existingData || {
+          timestamp: Date.now(),
+          courses: {}
+        };
+
+        // Fetch missing courses
+        const totalCourses = coursesToFetch.length;
+        let completedCourses = 0;
+        
+        const fetchedData = await prefetchAllCourseData(coursesToFetch, (progress) => {
+          completedCourses = progress;
+          const existingCount = courses.length - coursesToFetch.length;
+          const totalProgress = Math.round(((completedCourses + existingCount) / courses.length) * 100);
+          setPrefetchProgress(totalProgress);
+        });
+        
+        // Merge new data with existing data
+        const mergedData: PrefetchedData = {
+          timestamp: Date.now(),
+          courses: {
+            ...newData.courses,
+            ...fetchedData.courses
+          }
+        };
+        
+        setPrefetchedData(mergedData);
+        localStorage.setItem('prefetchedData', JSON.stringify(mergedData));
+        
+        // Check for any courses that failed to fetch
+        const errors: Record<string, boolean> = {};
+        courses.forEach(course => {
+          if (!mergedData.courses[course.id]) {
+            errors[course.id] = true;
+          }
+        });
+        setPrefetchErrors(errors);
       } catch (error) {
         console.error('Error prefetching data:', error);
+      } finally {
+        setIsPrefetching(false);
       }
     }
 
@@ -143,16 +197,39 @@ const PreReqChart = () => {
     setSelectedCourse(course);
     setIsLoading(true);
     try {
-      let data;
+      let data: CourseEnrollmentData;
       if (prefetchedData?.courses[course.id]) {
         data = prefetchedData.courses[course.id];
       } else {
+        // If data wasn't prefetched successfully, try fetching it now
         data = await fetchCourseData(course.id);
+        // Update prefetched data
+        setPrefetchedData(prev => {
+          const newData = {
+            timestamp: Date.now(),
+            courses: {
+              ...(prev?.courses || {}),
+              [course.id]: data
+            }
+          };
+          // Update local storage with new data
+          localStorage.setItem('prefetchedData', JSON.stringify(newData));
+          return newData;
+        });
+        // Clear error state for this course
+        setPrefetchErrors(prev => ({
+          ...prev,
+          [course.id]: false
+        }));
       }
       setEnrollmentData(data);
     } catch (error) {
       console.error('Error fetching enrollment data:', error);
       setEnrollmentData(null);
+      setPrefetchErrors(prev => ({
+        ...prev,
+        [course.id]: true
+      }));
     } finally {
       setIsLoading(false);
     }
@@ -165,6 +242,15 @@ const PreReqChart = () => {
 
   return (
     <div className="fixed inset-0 bg-gray-50">
+      {isPrefetching && (
+        <div className="fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <span>Prefetching course data: {prefetchProgress}%</span>
+          </div>
+        </div>
+      )}
+      
       <div className="absolute top-4 left-4 flex gap-2 z-10">
         <button
           onClick={() => setTransform(prev => ({ ...prev, scale: Math.max(MIN_ZOOM, prev.scale - ZOOM_STEP) }))}
@@ -272,8 +358,8 @@ const PreReqChart = () => {
                 height={BOX_HEIGHT}
                 rx={CORNER_RADIUS}
                 ry={CORNER_RADIUS}
-                fill="white"
-                stroke="#333"
+                fill={prefetchErrors[course.id] ? "#fee2e2" : "white"}
+                stroke={prefetchErrors[course.id] ? "#ef4444" : "#333"}
                 strokeWidth="2"
                 className="cursor-pointer hover:fill-blue-50 transition-colors"
               />
