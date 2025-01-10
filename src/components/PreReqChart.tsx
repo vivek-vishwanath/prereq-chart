@@ -165,14 +165,6 @@ const PreReqChart = () => {
 
   return (
     <div className="fixed inset-0 bg-gray-50">
-      {!prefetchedData && (
-        <div className="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading course data...</p>
-          </div>
-        </div>
-      )}
       <div className="absolute top-4 left-4 flex gap-2 z-10">
         <button
           onClick={() => setTransform(prev => ({ ...prev, scale: Math.max(MIN_ZOOM, prev.scale - ZOOM_STEP) }))}

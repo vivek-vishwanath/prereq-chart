@@ -1,0 +1,17 @@
+{
+  "timestamp": 1736530987420,
+  "courses": {
+    "prereqs": {
+      "currentEnrollment": 0,
+      "currentCapacity": 0,
+      "pastEnrollment": 0,
+      "pastCapacity": 0
+    },
+    "courses": {
+      "currentEnrollment": 0,
+      "currentCapacity": 0,
+      "pastEnrollment": 0,
+      "pastCapacity": 0
+    }
+  }
+}
