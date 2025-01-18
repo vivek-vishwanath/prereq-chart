@@ -7,7 +7,7 @@ export interface CourseEnrollmentData {
 
 const courseDataCache = new Map<string, { data: CourseEnrollmentData; timestamp: number }>();
 const CACHE_DURATION = 1000 * 60 * 60; // 1 hour cache duration
-const pendingRequests = new Map<string, Promise<any>>();
+const pendingRequests = new Map<string, Promise<string>>();
 
 async function fetchWithDedup(url: string, cacheKey: string) {
     if (pendingRequests.has(cacheKey)) {
@@ -54,7 +54,7 @@ async function fetchSectionCRNs(term: string, courseName: string) {
             sections = courseData;
         }
 
-        for (let section in sections) {
+        for (const section in sections) {
             const sectionData = sections[section];
             if (Array.isArray(sectionData) && sectionData.length >= 3 && sectionData[2] !== 0) {
                 CRNList[section] = sectionData[0];
@@ -118,7 +118,7 @@ async function termTotalEnrollment(term: string, courseName: string) {
         'Enrollment Maximum': 0
     };
 
-    for (let section in data) {
+    for (const section in data) {
         totals['Enrollment Actual'] += parseInt(data[section]['Enrollment Actual']);
         if (parseInt(data[section]['Enrollment Maximum']) === 0) {
             totals['Enrollment Maximum'] += parseInt(data[section]['Enrollment Actual']);
@@ -129,10 +129,10 @@ async function termTotalEnrollment(term: string, courseName: string) {
     return totals;
 }
 
-function formatCourseId(courseId: string): string {
-    // Remove spaces and ensure proper format (e.g., "CS 1301" becomes "CS1301")
-    return courseId.replace(/\s+/g, '');
-}
+// function formatCourseId(courseId: string): string {
+//     // Remove spaces and ensure proper format (e.g., "CS 1301" becomes "CS1301")
+//     return courseId.replace(/\s+/g, '');
+// }
 
 export async function fetchCourseData(courseName: string): Promise<CourseEnrollmentData> {
     const cachedData = courseDataCache.get(courseName);
@@ -149,11 +149,11 @@ export async function fetchCourseData(courseName: string): Promise<CourseEnrollm
 
     try {
         const [currentTermData, pastTermData] = await Promise.all([
-            termTotalEnrollment(currentTerm, courseName).catch(err => ({
+            termTotalEnrollment(currentTerm, courseName).catch(() => ({
                 'Enrollment Actual': 0,
                 'Enrollment Maximum': 0
             })),
-            termTotalEnrollment(pastTerm, courseName).catch(err => ({
+            termTotalEnrollment(pastTerm, courseName).catch(() => ({
                 'Enrollment Actual': 0,
                 'Enrollment Maximum': 0
             }))

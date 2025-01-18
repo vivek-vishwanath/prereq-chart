@@ -1,4 +1,4 @@
-import Image from "next/image";
+//import Image from "next/image";
 import PreReqChart from '../components/PreReqChart';
 
 export default function Home() {
