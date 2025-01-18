@@ -1,8 +1,8 @@
 export interface CourseEnrollmentData {
     currentEnrollment: number;
-    currentCapacity: number;
     pastEnrollment: number;
-    pastCapacity: number;
+    oneYearBackEnrollment: number;
+    oneYearOneSemBackEnrollment: number;
 }
 
 const courseDataCache = new Map<string, { data: CourseEnrollmentData; timestamp: number }>();
@@ -37,8 +37,6 @@ async function fetchSectionCRNs(term: string, courseName: string) {
     try {
         const data = await fetchWithDedup(url, cacheKey);
         const CRNList: Record<string, string> = {};
-
-        console.log('Course data:', data.courses[courseName]);
 
         if (!data.courses[courseName]) {
             console.error(`Course ${courseName} not found in term ${term}`);
@@ -146,9 +144,11 @@ export async function fetchCourseData(courseName: string): Promise<CourseEnrollm
 
     const currentTerm = month >= 8 ? `${year}08` : `${year}02`;
     const pastTerm = month >= 8 ? `${year}02` : `${year - 1}08`;
+    const oneYearBack = month >= 8 ? `${year - 1}08` : `${year - 1}02`;
+    const oneYearOneSemBack = month >= 8 ? `${year - 1}02` : `${year - 2}08`;
 
     try {
-        const [currentTermData, pastTermData] = await Promise.all([
+        const [currentTermData, pastTermData, oneYearBackTermData, oneYearOneSemBackTermData] = await Promise.all([
             termTotalEnrollment(currentTerm, courseName).catch(() => ({
                 'Enrollment Actual': 0,
                 'Enrollment Maximum': 0
@@ -156,14 +156,23 @@ export async function fetchCourseData(courseName: string): Promise<CourseEnrollm
             termTotalEnrollment(pastTerm, courseName).catch(() => ({
                 'Enrollment Actual': 0,
                 'Enrollment Maximum': 0
+            })),
+            termTotalEnrollment(oneYearBack, courseName).catch(() => ({
+                'Enrollment Actual': 0,
+                'Enrollment Maximum': 0
+            })),
+            termTotalEnrollment(oneYearOneSemBack, courseName).catch(() => ({
+                'Enrollment Actual': 0,
+                'Enrollment Maximum': 0
             }))
         ]);
 
         const data = {
             currentEnrollment: currentTermData['Enrollment Actual'],
-            currentCapacity: currentTermData['Enrollment Maximum'],
             pastEnrollment: pastTermData['Enrollment Actual'],
-            pastCapacity: pastTermData['Enrollment Maximum']
+            oneYearBackEnrollment: oneYearBackTermData['Enrollment Actual'],
+            oneYearOneSemBackEnrollment: oneYearOneSemBackTermData['Enrollment Actual']
+
         };
 
         courseDataCache.set(courseName, {
@@ -177,9 +186,9 @@ export async function fetchCourseData(courseName: string): Promise<CourseEnrollm
         // Return default data instead of throwing
         return {
             currentEnrollment: 0,
-            currentCapacity: 0,
             pastEnrollment: 0,
-            pastCapacity: 0
+            oneYearBackEnrollment: 0,
+            oneYearOneSemBackEnrollment: 0
         };
     }
 } 
