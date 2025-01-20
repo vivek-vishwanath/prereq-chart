@@ -19,6 +19,7 @@ interface Course {
   name: string;
   x: number;
   y: number;
+  color?: string;
 }
 
 const PreReqChart = () => {
@@ -242,6 +243,10 @@ const PreReqChart = () => {
 
   return (
     <div className="fixed inset-0 bg-gray-50">
+      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-10">
+        <h1 className="text-3xl font-bold text-gray-800">School of Computing Instruction Course Tree</h1>
+      </div>
+
       {isPrefetching && (
         <div className="fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50">
           <div className="flex items-center gap-2">
@@ -251,7 +256,7 @@ const PreReqChart = () => {
         </div>
       )}
       
-      <div className="absolute top-4 left-4 flex gap-2 z-10">
+      <div className="absolute bottom-4 right-4 flex gap-2 z-10">
         <button
           onClick={() => setTransform(prev => ({ ...prev, scale: Math.max(MIN_ZOOM, prev.scale - ZOOM_STEP) }))}
           className="p-2 bg-white shadow rounded hover:bg-gray-100"
@@ -358,7 +363,7 @@ const PreReqChart = () => {
                 height={BOX_HEIGHT}
                 rx={CORNER_RADIUS}
                 ry={CORNER_RADIUS}
-                fill={prefetchErrors[course.id] ? "#fee2e2" : "white"}
+                fill={course.color || "white"}
                 stroke={prefetchErrors[course.id] ? "#ef4444" : "#333"}
                 strokeWidth="2"
                 className="cursor-pointer hover:fill-blue-50 transition-colors"

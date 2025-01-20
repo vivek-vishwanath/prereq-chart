@@ -2,81 +2,143 @@
   "courses": [
     {
       "id": "CS 1301",
-      "name": "Intro to Computing",
+      "name": "Intro to Programming Python",
       "x": 100,
-      "y": 100
+      "y": 200,
+      "color": "Gold"
     },
     {
       "id": "CS 1331",
-      "name": "Intro to Object-Oriented Programming",
+      "name": "OO Programming Java",
       "x": 300,
-      "y": 100
+      "y": 200,
+      "color": "Gold"
     },
     {
       "id": "CS 1332",
-      "name": "Data Structures & Algorithms",
+      "name": "Data Structures & Algorithms Java",
       "x": 500,
-      "y": 100
+      "y": 100,
+      "color": "Gold"
+    },
+    {
+      "id": "CS 2050",
+      "name": "Intro Discrete Math",
+      "x": 500,
+      "y": 0,
+      "color": "Gold"
     },
     {
       "id": "CS 2110",
-      "name": "Computer Organization & Programming",
-      "x": 300,
-      "y": 200
+      "name": "Computer Organization C & Assembly",
+      "x": 700,
+      "y": 200,
+      "color": "Gold"
     },
     {
-      "id": "CS 2200",
-      "name": "Systems & Networks",
-      "x": 500,
-      "y": 200
+      "id": "CS 2261",
+      "name": "Media Device Architectures C",
+      "x": 700,
+      "y": 300,
+      "color": "Gold"
     },
     {
       "id": "CS 2340",
-      "name": "Objects and Design",
+      "name": "Objects & Design Java",
       "x": 700,
-      "y": 200
+      "y": 150,
+      "color": "Gold"
     },
     {
-      "id": "CS 3510",
-      "name": "Design and Analysis of Algorithms",
-      "x": 300,
-      "y": 300
+      "id": "CS 2200",
+      "name": "Comp Systems & Networks C",
+      "x": 900,
+      "y": 300,
+      "color": "Gold"
     },
     {
-      "id": "CS 3511",
-      "name": "Design and Analysis of Algorithms Honors",
-      "x": 500,
-      "y": 300
+      "id": "CS 3451",
+      "name": "CS 3451",
+      "x": 1100,
+      "y": 200,
+      "color": "White"
     },
     {
-      "id": "MATH 1551",
-      "name": "Differential Calculus",
-      "x": 100,
-      "y": 300
+      "id": "CS 3311",
+      "name": "Project Design",
+      "x": 1100,
+      "y": 300,
+      "color": "Gold"
     },
     {
-      "id": "MATH 1552",
-      "name": "Integral Calculus",
-      "x": 100,
-      "y": 400
+      "id": "CS 3312",
+      "name": "Project Implementation",
+      "x": 1300,
+      "y": 300,
+      "color": "Gold"
     },
     {
-      "id": "MATH 1554",
-      "name": "Linear Algebra",
-      "x": 300,
-      "y": 400
-    },
-    {
-      "id": "CS 4641",
-      "name": "Machine Learning",
-      "x": 500,
-      "y": 400
-    },
-    {
-      "id": "CS 3600",
-      "name": "Introduction to Artificial Intelligence",
+      "id": "CS 3510, 4510, 4540, 4650, ECE 4185",
+      "name": "",
       "x": 700,
-      "y": 400
+      "y": 0,
+      "color": "White"
+    },
+    {
+      "id": "CS 2335, 3600, 3630, 4245, 4460, 4649",
+      "name": "",
+      "x": 700,
+      "y": 100,
+      "color": "White"
+    },
+    {
+      "id": "CS 4220, 4235, 4260, 4261, 4290, 4675, 4685",
+      "name": "",
+      "x": 1100,
+      "y": 100,
+      "color": "White"
+    },
+    {
+      "id": "CS 4210, 4223, 4237, 4251, 4255, 4270",
+      "name": "",
+      "x": 1300,
+      "y": 100,
+      "color": "White"
+    },
+    {
+      "id": "CS 4420, 4365, 4440, 4475",
+      "name": "",
+      "x": 300,
+      "y": 100,
+      "color": "White"
+    },
+    {
+      "id": "CS 4140, 4220, 4230, 4464, 4641",
+      "name": "",
+      "x": 500,
+      "y": 300,
+      "color": "White"
+    },
+    {
+      "id": "CS 4455, 4480, 4496",
+      "name": "",
+      "x": 1300,
+      "y": 200,
+      "color": "White"
+    },
+    {
+      "id": "CS 3240, 3300, 4240, 4392, 4470",
+      "name": "",
+      "x": 1500,
+      "y": 200,
+      "color": "White"
+    },
+    {
+      "id": "CS 4873",
+      "name": "",
+      "x": 1500,
+      "y": 300,
+      "color": "White"
     }
   ],
   "prereqs": [
@@ -85,16 +147,20 @@
       "to": "CS 1331"
     },
     {
+      "from": "CS 1301",
+      "to": "CS 4420, 4365, 4440, 4475"
+    },
+    {
       "from": "CS 1331",
       "to": "CS 1332"
     },
     {
-      "from": "CS 1332",
+      "from": "CS 1331",
       "to": "CS 2110"
     },
     {
-      "from": "CS 1332",
-      "to": "CS 3510"
+      "from": "CS 1331",
+      "to": "CS 2340"
     },
     {
       "from": "CS 2110",
@@ -102,27 +168,59 @@
     },
     {
       "from": "CS 2200",
-      "to": "CS 2340"
+      "to": "CS 3451"
     },
     {
-      "from": "CS 3510",
-      "to": "CS 4641"
+      "from": "CS 3451",
+      "to": "CS 3311"
     },
     {
-      "from": "MATH 1551",
-      "to": "MATH 1552"
+      "from": "CS 3311",
+      "to": "CS 3312"
     },
     {
-      "from": "MATH 1552",
-      "to": "MATH 1554"
+      "from": "CS 2050",
+      "to": "CS 3510, 4510, 4540, 4650, ECE 4185"
     },
     {
-      "from": "MATH 1554",
-      "to": "CS 4641"
+      "from": "CS 1332",
+      "to": "CS 3510, 4510, 4540, 4650, ECE 4185"
     },
     {
-      "from": "CS 4641",
-      "to": "CS 3600"
+      "from": "CS 1331",
+      "to": "CS 4140, 4220, 4230, 4464, 4641"
+    },
+    {
+      "from": "CS 2340",
+      "to": "CS 3451"
+    },
+    {
+      "from": "CS 1331",
+      "to": "CS 2261"
+    },
+    {
+      "from": "CS 2200",
+      "to": "CS 3240, 3300, 4240, 4392, 4470"
+    },
+    {
+      "from": "CS 1332",
+      "to": "CS 2335, 3600, 3630, 4245, 4460, 4649"
+    },
+    {
+      "from": "CS 2335, 3600, 3630, 4245, 4460, 4649",
+      "to": "CS 4220, 4235, 4260, 4261, 4290, 4675, 4685"
+    },
+    {
+      "from": "CS 4220, 4235, 4260, 4261, 4290, 4675, 4685",
+      "to": "CS 4210, 4223, 4237, 4251, 4255, 4270"
+    },
+    {
+      "from": "CS 3451",
+      "to": "CS 4455, 4480, 4496"
+    },
+    {
+      "from": "CS 3312",
+      "to": "CS 4873"
     }
   ]
 }
