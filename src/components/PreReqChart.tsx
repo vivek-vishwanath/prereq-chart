@@ -12,6 +12,7 @@ const { courses, prereqs } = data;
 interface Point {
   x: number;
   y: number;
+  id: string;
 }
 
 interface Course {
@@ -135,12 +136,34 @@ const PreReqChart = () => {
   }, []);
 
   const createPath = (start: Point, end: Point) => {
-    if (start.y === end.y) {
-      return `M ${start.x * 192 + BOX_WIDTH / 2} ${start.y * 96} 
-              L ${end.x * 192 - BOX_WIDTH / 2} ${end.y * 96}`;
+    // Special handling for connections to AND/OR nodes
+    const isEndLogicGate = end.id === "&" || end.id === "OR";
+    const isStartLogicGate = start.id === "&" || start.id === "OR";
+    const logicGateSize = 40;
+    const normalBoxOffset = BOX_WIDTH / 2;
+
+    let startX = start.x * 192;
+    let endX = end.x * 192;
+
+    // Adjust start point
+    if (isStartLogicGate) {
+      startX += logicGateSize/2;
+    } else {
+      startX += normalBoxOffset;
     }
-    const startX = start.x * 192 + BOX_WIDTH/2;
-    const endX = end.x * 192 - BOX_WIDTH/2;
+
+    // Adjust end point
+    if (isEndLogicGate) {
+      endX -= logicGateSize/2;
+    } else {
+      endX -= normalBoxOffset;
+    }
+
+    if (start.y === end.y) {
+      return `M ${startX} ${start.y * 96} 
+              L ${endX} ${end.y * 96}`;
+    }
+
     const distance = endX - startX;
     const thirdDistance = distance / 6;
 
@@ -195,6 +218,11 @@ const PreReqChart = () => {
   };
 
   const handleCourseClick = async (course: Course) => {
+    // Skip data fetching for AND/OR nodes
+    if (course.id === "&" || course.id === "OR") {
+      return;
+    }
+
     setSelectedCourse(course);
     setIsLoading(true);
     try {
@@ -354,40 +382,70 @@ const PreReqChart = () => {
             return null;
           })}
 
-          {courses.map((course) => (
-            <g key={course.id} onClick={() => handleCourseClick(course)}>
-              <rect
-                x={course.x * 192 - BOX_WIDTH / 2}
-                y={course.y * 96 - BOX_HEIGHT / 2}
-                width={BOX_WIDTH}
-                height={BOX_HEIGHT}
-                rx={CORNER_RADIUS}
-                ry={CORNER_RADIUS}
-                fill={course.color || "white"}
-                stroke={prefetchErrors[course.id] ? "#ef4444" : "#333"}
-                strokeWidth="2"
-                className="cursor-pointer hover:fill-blue-50 transition-colors"
-              />
+          {courses.map((course) => {
+            // Special rendering for AND/OR nodes
+            if (course.id === "&" || course.id === "OR") {
+              const size = 40; // Smaller size for AND/OR nodes
+              return (
+                <g key={course.id}>
+                  <path
+                    d={`M ${course.x * 192} ${course.y * 96 - size/2} 
+                        L ${course.x * 192 + size/2} ${course.y * 96}
+                        L ${course.x * 192} ${course.y * 96 + size/2}
+                        L ${course.x * 192 - size/2} ${course.y * 96}
+                        Z`}
+                    fill="#f0f9ff"
+                    stroke="#333"
+                    strokeWidth="2"
+                  />
+                  <text
+                    x={course.x * 192}
+                    y={course.y * 96 + 6}
+                    textAnchor="middle"
+                    className="text-sm font-bold"
+                  >
+                    {course.id === "&" ? "AND" : "OR"}
+                  </text>
+                </g>
+              );
+            }
 
-              <text
-                x={course.x * 192}
-                y={course.y * 96 - 10}
-                textAnchor="middle"
-                className="text-sm font-bold"
-              >
-                {course.id}
-              </text>
+            // Regular course rendering
+            return (
+              <g key={course.id} onClick={() => handleCourseClick(course)}>
+                <rect
+                  x={course.x * 192 - BOX_WIDTH / 2}
+                  y={course.y * 96 - BOX_HEIGHT / 2}
+                  width={BOX_WIDTH}
+                  height={BOX_HEIGHT}
+                  rx={CORNER_RADIUS}
+                  ry={CORNER_RADIUS}
+                  fill={course.color || "white"}
+                  stroke={prefetchErrors[course.id] ? "#ef4444" : "#333"}
+                  strokeWidth="2"
+                  className="cursor-pointer hover:fill-blue-50 transition-colors"
+                />
 
-              <text
-                x={course.x * 192}
-                y={course.y * 96 + 12}
-                textAnchor="middle"
-                className="text-xs"
-              >
-                {course.name}
-              </text>
-            </g>
-          ))}
+                <text
+                  x={course.x * 192}
+                  y={course.y * 96 - 10}
+                  textAnchor="middle"
+                  className="text-sm font-bold"
+                >
+                  {course.id}
+                </text>
+
+                <text
+                  x={course.x * 192}
+                  y={course.y * 96 + 12}
+                  textAnchor="middle"
+                  className="text-xs"
+                >
+                  {course.name}
+                </text>
+              </g>
+            );
+          })}
         </g>
       </svg>
     </div>
