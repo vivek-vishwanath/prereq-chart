@@ -136,19 +136,19 @@ const PreReqChart = () => {
 
   const createPath = (start: Point, end: Point) => {
     if (start.y === end.y) {
-      return `M ${start.x + BOX_WIDTH / 2} ${start.y} 
-              L ${end.x - BOX_WIDTH / 2} ${end.y}`;
+      return `M ${start.x * 192 + BOX_WIDTH / 2} ${start.y * 96} 
+              L ${end.x * 192 - BOX_WIDTH / 2} ${end.y * 96}`;
     }
-    const startX = start.x + BOX_WIDTH/2;
-    const endX = end.x - BOX_WIDTH/2;
+    const startX = start.x * 192 + BOX_WIDTH/2;
+    const endX = end.x * 192 - BOX_WIDTH/2;
     const distance = endX - startX;
     const thirdDistance = distance / 6;
 
-    return `M ${startX} ${start.y}
+    return `M ${startX} ${start.y * 96}
             h ${thirdDistance}
-            C ${startX + 2 * thirdDistance} ${start.y},
-              ${endX - 2 * thirdDistance} ${end.y},
-              ${endX - thirdDistance} ${end.y}
+            C ${startX + 2 * thirdDistance} ${start.y * 96},
+              ${endX - 2 * thirdDistance} ${end.y * 96},
+              ${endX - thirdDistance} ${end.y * 96}
             h ${thirdDistance}`;
   };
 
@@ -357,8 +357,8 @@ const PreReqChart = () => {
           {courses.map((course) => (
             <g key={course.id} onClick={() => handleCourseClick(course)}>
               <rect
-                x={course.x - BOX_WIDTH / 2}
-                y={course.y - BOX_HEIGHT / 2}
+                x={course.x * 192 - BOX_WIDTH / 2}
+                y={course.y * 96 - BOX_HEIGHT / 2}
                 width={BOX_WIDTH}
                 height={BOX_HEIGHT}
                 rx={CORNER_RADIUS}
@@ -370,8 +370,8 @@ const PreReqChart = () => {
               />
 
               <text
-                x={course.x}
-                y={course.y - 10}
+                x={course.x * 192}
+                y={course.y * 96 - 10}
                 textAnchor="middle"
                 className="text-sm font-bold"
               >
@@ -379,8 +379,8 @@ const PreReqChart = () => {
               </text>
 
               <text
-                x={course.x}
-                y={course.y + 12}
+                x={course.x * 192}
+                y={course.y * 96 + 12}
                 textAnchor="middle"
                 className="text-xs"
               >
