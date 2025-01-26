@@ -69,7 +69,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 - [Vineeth Sendilraj](https://www.linkedin.com/in/vineethsendilraj/)
 - [Vivek](https://www.linkedin.com/in/vivek/)
-- [Daveh Day](https://www.linkedin.com/in/davehday/)
+- [Daveh Day](https://www.linkedin.com/in/daveh-day/)
 
 ## License
 
