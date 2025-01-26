@@ -394,7 +394,7 @@ const PreReqChart = () => {
                         L ${course.x * 192} ${course.y * 96 + size/2}
                         L ${course.x * 192 - size/2} ${course.y * 96}
                         Z`}
-                    fill="#f0f9ff"
+                    fill="#000000"
                     stroke="#333"
                     strokeWidth="2"
                   />
@@ -403,6 +403,7 @@ const PreReqChart = () => {
                     y={course.y * 96 + 6}
                     textAnchor="middle"
                     className="text-sm font-bold"
+                    fill="white"
                   >
                     {course.id === "&" ? "AND" : "OR"}
                   </text>
