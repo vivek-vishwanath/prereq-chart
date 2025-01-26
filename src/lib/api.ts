@@ -54,7 +54,7 @@ async function fetchSectionCRNs(term: string, courseName: string) {
             sections = courseData;
         }
 
-        for (let section in sections) {
+        for (const section in sections) {
             const sectionData = sections[section];
             if (Array.isArray(sectionData) && sectionData.length >= 3 && sectionData[2] !== 0) {
                 CRNList[section] = sectionData[0];
@@ -118,7 +118,7 @@ async function termTotalEnrollment(term: string, courseName: string) {
         'Enrollment Maximum': 0
     };
 
-    for (let section in data) {
+    for (const section in data) {
         totals['Enrollment Actual'] += parseInt(data[section]['Enrollment Actual']);
         if (parseInt(data[section]['Enrollment Maximum']) === 0) {
             totals['Enrollment Maximum'] += parseInt(data[section]['Enrollment Actual']);

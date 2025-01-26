@@ -547,8 +547,8 @@ const PreReqChart = () => {
                     rx={CORNER_RADIUS}
                     ry={CORNER_RADIUS}
                     fill={course.type ? (darkMode ? COLORS[course.type].dark.bg : COLORS[course.type].light.bg) : (darkMode ? "#1f2937" : "white")}
-                    stroke={darkMode ? "#4b5563" : "#e5e7eb"}
-                    strokeWidth="2"
+                    stroke={prefetchErrors[course.id] ? "#ef4444" : (darkMode ? "#4b5563" : "#e5e7eb")}
+                    strokeWidth={prefetchErrors[course.id] ? "3" : "2"}
                     className="cursor-pointer transition-colors duration-200"
                   />
 
