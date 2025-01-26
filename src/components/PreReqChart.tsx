@@ -12,6 +12,7 @@ type CourseType = 'required' | 'intelligence' | 'information' | undefined;
 interface Point {
   x: number;
   y: number;
+  name: string;
   id: string;
 }
 
@@ -228,8 +229,8 @@ const PreReqChart = () => {
   };
 
   const createPath = (start: Point, end: Point, prereq: Prereq) => {
-    const isEndLogicGate = end.id === "&" || end.id === "OR";
-    const isStartLogicGate = start.id === "&" || start.id === "OR";
+    const isEndLogicGate = end.name === "AND" || end.name === "OR";
+    const isStartLogicGate = start.name === "AND" || start.name === "OR";
 
     // Use default connection sides unless overridden
     const { fromSide, toSide } = { ...DEFAULT_CONNECTION, ...prereq };
@@ -303,7 +304,7 @@ const PreReqChart = () => {
 
   const handleCourseClick = async (course: Course) => {
     // Skip data fetching for AND/OR nodes
-    if (course.id === "&" || course.id === "OR") {
+    if (course.name === "AND" || course.name === "OR") {
       return;
     }
 
@@ -508,7 +509,7 @@ const PreReqChart = () => {
 
             {courses.map((course) => {
               // Special rendering for AND/OR nodes
-              if (course.id === "&" || course.id === "OR") {
+              if (course.name === "AND" || course.name === "OR") {
                 const size = 40;
                 return (
                   <g key={course.id}>
@@ -530,7 +531,7 @@ const PreReqChart = () => {
                       className="text-sm font-bold"
                       fill={darkMode ? "#e5e7eb" : "#4b5563"}
                     >
-                      {course.id === "&" ? "AND" : "OR"}
+                      {course.name}
                     </text>
                   </g>
                 );
