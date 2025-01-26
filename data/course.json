@@ -183,11 +183,15 @@
     },
     {
       "from": "CS 1331",
-      "to": "CS 2110"
+      "to": "CS 2110",
+      "fromSide": "bottom",
+      "toSide": "top"
     },
     {
       "from": "CS 2110",
-      "to": "CS 2200"
+      "to": "CS 2200",
+      "fromSide": "bottom",
+      "toSide": "top"
     }
   ]
 }
