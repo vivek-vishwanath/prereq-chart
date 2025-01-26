@@ -86,6 +86,9 @@ const DEFAULT_CONNECTION = {
   toSide: 'left' as const
 };
 
+const HORIZONTAL_SPACING = 256;
+const VERTICAL_SPACING = 96;
+
 const PreReqChart = () => {
   const BOX_WIDTH = 160;
   const BOX_HEIGHT = 80;
@@ -221,8 +224,8 @@ const PreReqChart = () => {
   }, [darkMode]);
 
   const getConnectionPoint = (course: Course, side: 'left' | 'right' | 'top' | 'bottom' = 'right', isLogicGate: boolean = false) => {
-    const x = course.x * 192;
-    const y = course.y * 96;
+    const x = course.x * HORIZONTAL_SPACING;
+    const y = course.y * VERTICAL_SPACING;
     const size = isLogicGate ? 40 : BOX_WIDTH;
     const height = isLogicGate ? 40 : BOX_HEIGHT;
 
@@ -425,98 +428,87 @@ const PreReqChart = () => {
     const opacity = isHighlighted ? "1" : "0.3";
 
     // Special rendering for AND/OR nodes
-    if (course.id === "AND" || course.id === "OR") {
-      const size = 40;
+      if (course.name === "AND" || course.name === "OR") {
+          const size = 40;
+          return (
+              <g key={course.id}>
+                  <path
+                      d={`M ${course.x * HORIZONTAL_SPACING} ${course.y * VERTICAL_SPACING - size/2} 
+                          L ${course.x * HORIZONTAL_SPACING + size/2} ${course.y * VERTICAL_SPACING}
+                          L ${course.x * HORIZONTAL_SPACING} ${course.y * VERTICAL_SPACING + size/2}
+                          L ${course.x * HORIZONTAL_SPACING - size/2} ${course.y * VERTICAL_SPACING}
+                          Z`}
+                      fill={darkMode ? "#1f2937" : "#f3f4f6"}
+                      stroke={darkMode ? "#4b5563" : "#9ca3af"}
+                      strokeWidth="2"
+                      className="transition-colors duration-200"
+                  />
+                  <text
+                      x={course.x * HORIZONTAL_SPACING}
+                      y={course.y * VERTICAL_SPACING + 6}
+                      textAnchor="middle"
+                      className="text-sm font-bold"
+                      fill={darkMode ? "#e5e7eb" : "#4b5563"}
+                  >
+                      {course.name}
+                  </text>
+              </g>
+          );
+      }
+
+      // Regular course rendering
       return (
-        <g
-          key={course.id}
-          style={{ transition: 'opacity 0.3s ease' }}
-          opacity={opacity}
-        >
-          <path
-            d={`M ${course.x * 192} ${course.y * 96 - size/2} 
-                L ${course.x * 192 + size/2} ${course.y * 96}
-                L ${course.x * 192} ${course.y * 96 + size/2}
-                L ${course.x * 192 - size/2} ${course.y * 96}
-                Z`}
-            fill={darkMode ? "#1f2937" : "#f3f4f6"}
-            stroke={darkMode ? "#4b5563" : "#9ca3af"}
-            strokeWidth="2"
-            className="transition-colors duration-200"
-          />
-          <text
-            x={course.x * 192}
-            y={course.y * 96 + 6}
-            textAnchor="middle"
-            className="text-sm font-bold"
-            fill={darkMode ? "#e5e7eb" : "#4b5563"}
-          >
-            {course.id === "&" ? "AND" : "OR"}
-          </text>
-        </g>
+          <g key={course.id} onClick={() => handleCourseClick(course)}>
+              <rect
+                  x={course.x * HORIZONTAL_SPACING - BOX_WIDTH / 2}
+                  y={course.y * VERTICAL_SPACING - BOX_HEIGHT / 2}
+                  width={BOX_WIDTH}
+                  height={BOX_HEIGHT}
+                  rx={CORNER_RADIUS}
+                  ry={CORNER_RADIUS}
+                  fill={course.type ? (darkMode ? COLORS[course.type].dark.bg : COLORS[course.type].light.bg) : (darkMode ? "#1f2937" : "white")}
+                  stroke={darkMode ? "#4b5563" : "#e5e7eb"}
+                  strokeWidth="2"
+                  className="cursor-pointer transition-colors duration-200"
+              />
+
+              <line
+                  x1={course.x * HORIZONTAL_SPACING - BOX_WIDTH / 2 + CORNER_RADIUS}
+                  y1={course.y * VERTICAL_SPACING - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT}
+                  x2={course.x * HORIZONTAL_SPACING + BOX_WIDTH / 2 - CORNER_RADIUS}
+                  y2={course.y * VERTICAL_SPACING - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT}
+                  stroke={darkMode ? "#4b5563" : "#e5e7eb"}
+                  strokeWidth="1"
+              />
+
+              <text
+                  x={course.x * HORIZONTAL_SPACING}
+                  y={course.y * VERTICAL_SPACING - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT/2 + 6}
+                  textAnchor="middle"
+                  fill={course.type ? (darkMode ? COLORS[course.type].dark.text : COLORS[course.type].light.text) : (darkMode ? "#f3f4f6" : "#111827")}
+                  className="text-base font-bold"
+              >
+                  {course.id}
+              </text>
+
+              <foreignObject
+                  x={course.x * HORIZONTAL_SPACING - BOX_WIDTH / 2 + 10}
+                  y={course.y * VERTICAL_SPACING - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT + 5}
+                  width={BOX_WIDTH - 20}
+                  height={BOX_HEIGHT - ID_SECTION_HEIGHT - 10}
+              >
+                  <div className={`text-center text-sm ${
+                      course.type
+                          ? (darkMode ? `text-${course.type === 'required' ? 'amber' : course.type === 'intelligence' ? 'emerald' : 'orange'}-200`
+                              : `text-${course.type === 'required' ? 'amber' : course.type === 'intelligence' ? 'emerald' : 'orange'}-900`)
+                          : (darkMode ? 'text-gray-300' : 'text-gray-600')
+                  }`}
+                       style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                      {course.name}
+                  </div>
+              </foreignObject>
+          </g>
       );
-    }
-
-    // Regular course rendering
-    return (
-      <g
-        key={course.id}
-        onClick={() => handleCourseClick(course)}
-        onMouseEnter={() => setHighlightedCourse(course.id)}
-        onMouseLeave={() => setHighlightedCourse(null)}
-        style={{ transition: 'opacity 0.3s ease' }}
-        opacity={opacity}
-      >
-        <rect
-          x={course.x * 192 - BOX_WIDTH / 2}
-          y={course.y * 96 - BOX_HEIGHT / 2}
-          width={BOX_WIDTH}
-          height={BOX_HEIGHT}
-          rx={CORNER_RADIUS}
-          ry={CORNER_RADIUS}
-          fill={course.type ? (darkMode ? COLORS[course.type].dark.bg : COLORS[course.type].light.bg) : (darkMode ? "#1f2937" : "white")}
-          stroke={prefetchErrors[course.id] ? "#ef4444" : (darkMode ? "#4b5563" : "#e5e7eb")}
-          strokeWidth={prefetchErrors[course.id] ? "3" : "2"}
-          className="cursor-pointer transition-colors duration-200"
-        />
-
-        <line
-          x1={course.x * 192 - BOX_WIDTH / 2 + CORNER_RADIUS}
-          y1={course.y * 96 - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT}
-          x2={course.x * 192 + BOX_WIDTH / 2 - CORNER_RADIUS}
-          y2={course.y * 96 - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT}
-          stroke={darkMode ? "#4b5563" : "#e5e7eb"}
-          strokeWidth="1"
-        />
-
-        <text
-          x={course.x * 192}
-          y={course.y * 96 - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT/2 + 6}
-          textAnchor="middle"
-          fill={course.type ? (darkMode ? COLORS[course.type].dark.text : COLORS[course.type].light.text) : (darkMode ? "#f3f4f6" : "#111827")}
-          className="text-base font-bold"
-        >
-          {course.id}
-        </text>
-
-        <foreignObject
-          x={course.x * 192 - BOX_WIDTH / 2 + 10}
-          y={course.y * 96 - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT + 5}
-          width={BOX_WIDTH - 20}
-          height={BOX_HEIGHT - ID_SECTION_HEIGHT - 10}
-        >
-          <div className={`text-center text-sm ${
-            course.type 
-              ? (darkMode ? `text-${course.type === 'required' ? 'amber' : course.type === 'intelligence' ? 'emerald' : 'orange'}-200` 
-                        : `text-${course.type === 'required' ? 'amber' : course.type === 'intelligence' ? 'emerald' : 'orange'}-900`)
-              : (darkMode ? 'text-gray-300' : 'text-gray-600')
-          }`}
-               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-            {course.name}
-          </div>
-        </foreignObject>
-      </g>
-    );
   };
 
   // Update arrow rendering to include highlighting
