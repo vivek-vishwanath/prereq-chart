@@ -14,6 +14,7 @@ type CourseType = 'required' | 'intelligence' | 'information' | undefined;
 interface Point {
   x: number;
   y: number;
+  name: string;
   id: string;
 }
 
@@ -240,8 +241,8 @@ const PreReqChart = () => {
   };
 
   const createPath = (start: Point, end: Point, prereq: Prereq) => {
-    const isEndLogicGate = end.id === "&" || end.id === "OR";
-    const isStartLogicGate = start.id === "&" || start.id === "OR";
+    const isEndLogicGate = end.name === "AND" || end.name === "OR";
+    const isStartLogicGate = start.name === "AND" || start.name === "OR";
 
     // Use default connection sides unless overridden
     const { fromSide, toSide } = { ...DEFAULT_CONNECTION, ...prereq };
@@ -315,7 +316,7 @@ const PreReqChart = () => {
 
   const handleCourseClick = async (course: Course) => {
     // Skip data fetching for AND/OR nodes
-    if (course.id === "&" || course.id === "OR") {
+    if (course.name === "AND" || course.name === "OR") {
       return;
     }
 
@@ -384,16 +385,16 @@ const PreReqChart = () => {
   const visiblePrereqs = prereqs.filter(prereq => {
     const fromCourse = courses.find(c => c.id === prereq.from);
     const toCourse = courses.find(c => c.id === prereq.to);
-    
+
     // Check if both courses exist and are visible
     if (!fromCourse || !toCourse) return false;
-    
+
     // If either course is filtered out, don't show the arrow
     if (fromCourse.type === 'intelligence' && !filters.showIntelligence) return false;
     if (fromCourse.type === 'information' && !filters.showInformation) return false;
     if (toCourse.type === 'intelligence' && !filters.showIntelligence) return false;
     if (toCourse.type === 'information' && !filters.showInformation) return false;
-    
+
     return true;
   });
 
@@ -401,13 +402,13 @@ const PreReqChart = () => {
   const getAllPrerequisites = (courseId: string, visited = new Set<string>()): Set<string> => {
     if (visited.has(courseId)) return visited;
     visited.add(courseId);
-    
+
     prereqs.forEach(prereq => {
       if (prereq.to === courseId) {
         getAllPrerequisites(prereq.from, visited);
       }
     });
-    
+
     return visited;
   };
 
@@ -424,10 +425,10 @@ const PreReqChart = () => {
     const opacity = isHighlighted ? "1" : "0.3";
 
     // Special rendering for AND/OR nodes
-    if (course.id === "&" || course.id === "OR") {
+    if (course.id === "AND" || course.id === "OR") {
       const size = 40;
       return (
-        <g 
+        <g
           key={course.id}
           style={{ transition: 'opacity 0.3s ease' }}
           opacity={opacity}
@@ -458,8 +459,8 @@ const PreReqChart = () => {
 
     // Regular course rendering
     return (
-      <g 
-        key={course.id} 
+      <g
+        key={course.id}
         onClick={() => handleCourseClick(course)}
         onMouseEnter={() => setHighlightedCourse(course.id)}
         onMouseLeave={() => setHighlightedCourse(null)}
@@ -524,8 +525,8 @@ const PreReqChart = () => {
     const toCourse = courses.find((c) => c.id === prereq.to);
 
     if (fromCourse && toCourse) {
-      const isHighlighted = highlightedCourse && 
-        shouldHighlight(toCourse.id) && 
+      const isHighlighted = highlightedCourse &&
+        shouldHighlight(toCourse.id) &&
         shouldHighlight(fromCourse.id);
       const opacity = !highlightedCourse || isHighlighted ? "1" : "0.1";
 
@@ -550,7 +551,7 @@ const PreReqChart = () => {
     const x = course.x * 192;
     const y = course.y * 96;
     const svgRect = svgRef.current?.getBoundingClientRect();
-    
+
     if (!svgRect) return { left: '50%', top: '50%', transform: 'translate(-50%, -50%)' };
 
     const courseX = (x * transform.scale + transform.x);
@@ -594,7 +595,7 @@ const PreReqChart = () => {
       const nodePrereqs = prereqs
         .filter(prereq => prereq.to === nodeId)
         .map(prereq => prereq.from);
-      
+
       if (nodeId.includes('&')) {
         prereqGroups.andGroups[nodeId] = nodePrereqs;
       } else if (nodeId.includes('OR')) {
@@ -766,11 +767,11 @@ const PreReqChart = () => {
                 Vivek
               </a>
               , and{' '}
-              <a href="https://www.linkedin.com/in/davehday/" target="_blank" rel="noopener noreferrer"
+              <a href="https://www.linkedin.com/in/daveh-day/" target="_blank" rel="noopener noreferrer"
                  className={`underline ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}>
                 Daveh Day
               </a>
-              , under the direction of Mary Hudachek-Buswell 
+              , under the direction of Mary Hudachek-Buswell
             </span>
           </div>
           <a
@@ -790,7 +791,7 @@ const PreReqChart = () => {
 
       {/* Popup with dark mode support */}
       {selectedCourse && (
-        <div 
+        <div
           className="fixed z-20"
           style={getPopupPosition(selectedCourse)}
           ref={popupRef}
@@ -813,9 +814,9 @@ const PreReqChart = () => {
                     <div className="space-y-2">
                       {(() => {
                         const prereqGroups = getPrerequisites(selectedCourse.id);
-                        
-                        if (prereqGroups.direct.length === 0 && 
-                            Object.keys(prereqGroups.andGroups).length === 0 && 
+
+                        if (prereqGroups.direct.length === 0 &&
+                            Object.keys(prereqGroups.andGroups).length === 0 &&
                             Object.keys(prereqGroups.orGroups).length === 0) {
                           return <p className="text-gray-500 dark:text-gray-400">No prerequisites</p>;
                         }
