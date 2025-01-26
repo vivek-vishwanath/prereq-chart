@@ -7,7 +7,7 @@ import { fetchCourseData } from '@/lib/api';
 import type { CourseEnrollmentData } from '@/lib/api';
 import { prefetchAllCourseData, type PrefetchedData } from '@/lib/prefetch';
 
-const { courses, prereqs } = data;
+type CourseType = 'required' | 'intelligence' | 'information' | undefined;
 
 interface Point {
   x: number;
@@ -20,7 +20,7 @@ interface Course {
   name: string;
   x: number;
   y: number;
-  color?: string;
+  type?: CourseType;
 }
 
 interface Prereq {
@@ -29,6 +29,53 @@ interface Prereq {
   fromSide?: 'left' | 'right' | 'top' | 'bottom';
   toSide?: 'left' | 'right' | 'top' | 'bottom';
 }
+
+interface CourseData {
+  courses: Course[];
+  prereqs: Prereq[];
+}
+
+const { courses, prereqs } = data as CourseData;
+
+// Color constants for course types
+const COLORS = {
+  required: {
+    light: {
+      bg: '#fbbf24',      // Amber-400
+      text: '#78350f',    // Amber-900
+      textSecondary: '#92400e'  // Amber-800
+    },
+    dark: {
+      bg: '#78350f',      // Amber-900
+      text: '#fbbf24',    // Amber-400
+      textSecondary: '#fcd34d'  // Amber-300
+    }
+  },
+  intelligence: {
+    light: {
+      bg: '#34d399',      // Emerald-400
+      text: '#064e3b',    // Emerald-900
+      textSecondary: '#065f46'  // Emerald-800
+    },
+    dark: {
+      bg: '#064e3b',      // Emerald-900
+      text: '#34d399',    // Emerald-400
+      textSecondary: '#6ee7b7'  // Emerald-300
+    }
+  },
+  information: {
+    light: {
+      bg: '#fb923c',      // Orange-400
+      text: '#7c2d12',    // Orange-900
+      textSecondary: '#9a3412'  // Orange-800
+    },
+    dark: {
+      bg: '#7c2d12',      // Orange-900
+      text: '#fb923c',    // Orange-400
+      textSecondary: '#fdba74'  // Orange-300
+    }
+  }
+} as const;
 
 // Add a type for the default connection sides
 const DEFAULT_CONNECTION = {
@@ -46,7 +93,7 @@ const PreReqChart = () => {
   const ZOOM_STEP = 0.1;
 
   const [showOnboarding, setShowOnboarding] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   const [transform, setTransform] = useState({ x: 0, y: 0, scale: 1 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -499,7 +546,7 @@ const PreReqChart = () => {
                     height={BOX_HEIGHT}
                     rx={CORNER_RADIUS}
                     ry={CORNER_RADIUS}
-                    fill={darkMode ? "#1f2937" : "white"}
+                    fill={course.type ? (darkMode ? COLORS[course.type].dark.bg : COLORS[course.type].light.bg) : (darkMode ? "#1f2937" : "white")}
                     stroke={darkMode ? "#4b5563" : "#e5e7eb"}
                     strokeWidth="2"
                     className="cursor-pointer transition-colors duration-200"
@@ -518,7 +565,7 @@ const PreReqChart = () => {
                     x={course.x * 192}
                     y={course.y * 96 - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT/2 + 6}
                     textAnchor="middle"
-                    fill={darkMode ? "#f3f4f6" : "#111827"}
+                    fill={course.type ? (darkMode ? COLORS[course.type].dark.text : COLORS[course.type].light.text) : (darkMode ? "#f3f4f6" : "#111827")}
                     className="text-base font-bold"
                   >
                     {course.id}
@@ -531,7 +578,10 @@ const PreReqChart = () => {
                     height={BOX_HEIGHT - ID_SECTION_HEIGHT - 10}
                   >
                     <div className={`text-center text-sm ${
-                      darkMode ? 'text-gray-300' : 'text-gray-600'
+                      course.type 
+                        ? (darkMode ? `text-${course.type === 'required' ? 'amber' : course.type === 'intelligence' ? 'emerald' : 'orange'}-200` 
+                                  : `text-${course.type === 'required' ? 'amber' : course.type === 'intelligence' ? 'emerald' : 'orange'}-900`)
+                        : (darkMode ? 'text-gray-300' : 'text-gray-600')
                     }`}
                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
                       {course.name}
@@ -551,14 +601,23 @@ const PreReqChart = () => {
             © 2024 Georgia Institute of Technology
           </p>
           <div className="flex items-center gap-4">
-            <a href="https://www.cc.gatech.edu/" target="_blank" rel="noopener noreferrer"
-               className={`text-sm hover:underline ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}>
-              College of Computing
-            </a>
-            <a href="https://www.gatech.edu/" target="_blank" rel="noopener noreferrer"
-               className={`text-sm hover:underline ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}>
-              Georgia Tech
-            </a>
+            <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              Made by{' '}
+              <a href="https://www.linkedin.com/in/vineethsendilraj/" target="_blank" rel="noopener noreferrer"
+                 className={`underline ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}>
+                Vineeth Sendilraj
+              </a>
+              ,{' '}
+              <a href="https://www.linkedin.com/in/vivek/" target="_blank" rel="noopener noreferrer"
+                 className={`underline ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}>
+                Vivek
+              </a>
+              , and{' '}
+              <a href="https://www.linkedin.com/in/davehday/" target="_blank" rel="noopener noreferrer"
+                 className={`underline ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}>
+                Daveh Day
+              </a>
+            </span>
           </div>
         </div>
       </footer>

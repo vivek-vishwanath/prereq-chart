@@ -5,119 +5,285 @@
       "name": "Differential Calculus",
       "x": 0,
       "y": 0,
-      "color": ""
+      "type": "required"
     },
     {
       "id": "MATH 1552",
       "name": "Integral Calculus",
       "x": 1,
       "y": 0,
-      "color": ""
+      "type": "required"
     },
     {
       "id": "MATH 1554",
       "name": "Linear Algebra",
       "x": 1,
       "y": 2,
-      "color": ""
+      "type": "required"
     },
     {
       "id": "MATH 2550",
       "name": "Intro to Multivariable Calculus",
       "x": 3,
       "y": 1,
-      "color": ""
+      "type": "required"
     },
     {
       "id": "MATH 2552",
       "name": "DIfferential Equations",
       "x": 3,
       "y": 0,
-      "color": ""
+      "type": "required"
     },
     {
       "id": "MATH 3012",
       "name": "Applied Combinatorics",
       "x": 3,
       "y": 4,
-      "color": ""
+      "type": "required"
     },
     {
       "id": "PROB/STAT",
       "name": "Probability & Statistics",
       "x": 7,
       "y": 1,
-      "color": ""
+      "type": "required"
     },
     {
       "id": "CS 1301",
       "name": "Introduction to Computing",
       "x": 0,
       "y": 8,
-      "color": ""
+      "type": "required"
     },
     {
       "id": "CS 1331",
       "name": "Introduction to Object Oriented Programming",
       "x": 1,
       "y": 8,
-      "color": ""
+      "type": "required"
     },
     {
       "id": "CS 1332",
       "name": "Data Structures & Algorithms",
       "x": 2,
       "y": 8,
-      "color": ""
+      "type": "required"
     },
     {
       "id": "CS 2050",
       "name": "Introduction to Discrete Math for CS",
       "x": 4,
       "y": 5,
-      "color": ""
+      "type": "required"
     },
     {
       "id": "CS 3510",
       "name": "Design and Analysis of Algorithms",
       "x": 5,
       "y": 6,
-      "color": ""
+      "type": "required"
     },
     {
       "id": "CS 2340",
       "name": "Objects & Design",
       "x": 2,
       "y": 9,
-      "color": ""
+      "type": "required"
     },
     {
       "id": "CS 2110",
       "name": "Computer Organization & Programming",
       "x": 2,
-      "y": 16,
-      "color": ""
+      "y": 11,
+      "type": "required"
     },
     {
       "id": "CS 2200",
       "name": "Computer Systems & Networks",
       "x": 3,
-      "y": 21,
-      "color": ""
+      "y": 13,
+      "type": "required"
     },
     {
       "id": "&",
       "name": "",
       "x": 2,
-      "y": 1,
-      "color": ""
+      "y": 1
     },
     {
       "id": "OR",
       "name": "",
       "x": 4,
+      "y": 6
+    },
+    {
+      "id": "CS 3251",
+      "name": "Computer Networking I",
+      "x": 6,
+      "y": 10,
+      "type": "information"
+    },
+    {
+      "id": "CS 3235",
+      "name": "Introduction to Information Security",
+      "x": 6,
+      "y": 11,
+      "type": "information"
+    },
+    {
+      "id": "CS 4400",
+      "name": "Introduction to Database Systems",
+      "x": 6,
+      "y": 12,
+      "type": "information"
+    },
+    {
+      "id": "CS 4251",
+      "name": "Computer Networking II",
+      "x": 7,
+      "y": 10,
+      "type": "information"
+    },
+    {
+      "id": "CS 4255",
+      "name": "Network Management",
+      "x": 7,
+      "y": 11,
+      "type": "information"
+    },
+    {
+      "id": "CS 4261",
+      "name": "Mobile Applications and Services",
+      "x": 7,
+      "y": 12,
+      "type": "information"
+    },
+    {
+      "id": "CS 4262",
+      "name": "Network Security",
+      "x": 7,
+      "y": 13,
+      "type": "information"
+    },
+    {
+      "id": "CS 4270",
+      "name": "Data Communications Laboratory",
+      "x": 7,
+      "y": 14,
+      "type": "information"
+    },
+    {
+      "id": "CS 4365",
+      "name": "Enterprise Computing",
+      "x": 7,
+      "y": 15,
+      "type": "information"
+    },
+    {
+      "id": "CS 4420",
+      "name": "Database System Implementation",
+      "x": 7,
+      "y": 16,
+      "type": "information"
+    },
+    {
+      "id": "CS 4440",
+      "name": "Emerging Database Technologies",
+      "x": 7,
+      "y": 17,
+      "type": "information"
+    },
+    {
+      "id": "CS 4675",
+      "name": "Internet Computing Systems",
+      "x": 7,
+      "y": 18,
+      "type": "information"
+    },
+    {
+      "id": "CS 3600",
+      "name": "Introduction to Artificial Intelligence",
+      "x": 6,
+      "y": 5,
+      "type": "intelligence"
+    },
+    {
+      "id": "CS 3630",
+      "name": "Introduction to Perception and Robotics",
+      "x": 7,
       "y": 6,
-      "color": ""
+      "type": "intelligence"
+    },
+    {
+      "id": "CS 3790",
+      "name": "Introduction to Cognitive Science",
+      "x": 7,
+      "y": 7,
+      "type": "intelligence"
+    },
+    {
+      "id": "CS 4476",
+      "name": "Introduction to Computer Vision",
+      "x": 8,
+      "y": 5,
+      "type": "intelligence"
+    },
+    {
+      "id": "CS 4510",
+      "name": "Automata and Complexity Theory",
+      "x": 8,
+      "y": 6,
+      "type": "intelligence"
+    },
+    {
+      "id": "CS 4635",
+      "name": "Knowledge-Based AI",
+      "x": 8,
+      "y": 7,
+      "type": "intelligence"
+    },
+    {
+      "id": "CS 4641",
+      "name": "Machine Learning",
+      "x": 8,
+      "y": 8,
+      "type": "intelligence"
+    },
+    {
+      "id": "CS 4644",
+      "name": "Deep Learning",
+      "x": 8,
+      "y": 9,
+      "type": "intelligence"
+    },
+    {
+      "id": "CS 4646",
+      "name": "Machine Learning for Trading",
+      "x": 8,
+      "y": 10,
+      "type": "intelligence"
+    },
+    {
+      "id": "CS 4649",
+      "name": "Robot Intelligence Planning",
+      "x": 8,
+      "y": 11,
+      "type": "intelligence"
+    },
+    {
+      "id": "CS 4650",
+      "name": "Natural Language Understanding",
+      "x": 8,
+      "y": 12,
+      "type": "intelligence"
+    },
+    {
+      "id": "CS 4731",
+      "name": "Game AI",
+      "x": 8,
+      "y": 13,
+      "type": "intelligence"
     }
   ],
   "prereqs": [
@@ -192,6 +358,50 @@
       "to": "CS 2200",
       "fromSide": "bottom",
       "toSide": "top"
+    },
+    {
+      "from": "CS 2200",
+      "to": "CS 3251"
+    },
+    {
+      "from": "CS 3251",
+      "to": "CS 4251"
+    },
+    {
+      "from": "CS 3251",
+      "to": "CS 4255"
+    },
+    {
+      "from": "CS 3251",
+      "to": "CS 4261"
+    },
+    {
+      "from": "CS 1332",
+      "to": "CS 4400"
+    },
+    {
+      "from": "CS 4400",
+      "to": "CS 4420"
+    },
+    {
+      "from": "CS 1332",
+      "to": "CS 3600"
+    },
+    {
+      "from": "CS 3600",
+      "to": "CS 4641"
+    },
+    {
+      "from": "CS 3600",
+      "to": "CS 4635"
+    },
+    {
+      "from": "CS 3600",
+      "to": "CS 4649"
+    },
+    {
+      "from": "CS 3600",
+      "to": "CS 4650"
     }
   ]
 }
