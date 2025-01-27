@@ -359,7 +359,7 @@ const PreReqChart = () => {
       {showOnboarding && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-lg mx-4">
-            <h2 className="text-2xl font-bold mb-4 dark:text-white">Welcome to GradGT</h2>
+            <h2 className="text-2xl font-bold mb-4 dark:text-white">Welcome to GT Course Prerequisites</h2>
             <div className="space-y-4 text-gray-600 dark:text-gray-300">
               <p>This interactive flowchart helps you understand course prerequisites at Georgia Tech.</p>
               <div className="space-y-2">
@@ -390,7 +390,7 @@ const PreReqChart = () => {
       <header className="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 shadow-md z-20 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
           <h1 className={`text-2xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
-            GradGT - CS
+            School of Computing Instruction Course Tree
           </h1>
           
           {/* Theme Toggle Button */}
@@ -596,10 +596,7 @@ const PreReqChart = () => {
 
       {/* Footer */}
       <footer className="fixed bottom-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 shadow-md z-20 transition-colors duration-200">
-        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
-          <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            © 2024 Georgia Institute of Technology
-          </p>
+        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-center">
           <div className="flex items-center gap-4">
             <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               Made by{' '}
@@ -613,10 +610,11 @@ const PreReqChart = () => {
                 Vivek
               </a>
               , and{' '}
-              <a href="https://www.linkedin.com/in/daveh-day/" target="_blank" rel="noopener noreferrer"
+              <a href="https://www.linkedin.com/in/davehday/" target="_blank" rel="noopener noreferrer"
                  className={`underline ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}>
                 Daveh Day
               </a>
+              , under the direction of Mary Hudachek-Buswell 
             </span>
           </div>
         </div>
