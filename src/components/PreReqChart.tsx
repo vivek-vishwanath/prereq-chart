@@ -158,7 +158,7 @@ const PreReqChart = () => {
         };
 
         // Fetch missing courses
-        const totalToFetch = coursesToFetch.length;
+        //const totalCourses = coursesToFetch.length;
         let completedCourses = 0;
         
         const fetchedData = await prefetchAllCourseData(coursesToFetch, (progress) => {
@@ -635,9 +635,9 @@ const PreReqChart = () => {
               ) : enrollmentData ? (
                 <div className="space-y-2">
                   <p>Current Semester Students Enrolled: {enrollmentData.currentEnrollment}</p>
-                  <p>Current Semester Maximum Capacity: {enrollmentData.currentCapacity}</p>
                   <p>Previous Semester Students Enrolled: {enrollmentData.pastEnrollment}</p>
-                  <p>Previous Semester Maximum Capacity: {enrollmentData.pastCapacity}</p>
+                  <p>One Year Ago Semester Students Enrolled: {enrollmentData.oneYearBackEnrollment}</p>
+                  <p>One Year and One Semester Ago Semester Students Enrolled: {enrollmentData.oneYearOneSemBackEnrollment}</p>
                 </div>
               ) : (
                 <p className="text-red-500">Error loading course data</p>
