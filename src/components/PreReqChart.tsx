@@ -158,15 +158,18 @@ const PreReqChart = () => {
         };
 
         // Fetch missing courses
-        // comment
-        const totalCourses = coursesToFetch.length;
+        const totalToFetch = coursesToFetch.length;
         let completedCourses = 0;
         
         const fetchedData = await prefetchAllCourseData(coursesToFetch, (progress) => {
           completedCourses = progress;
-          const existingCount = courses.length - totalCourses;
+          const existingCount = courses.length - totalToFetch;
           const totalProgress = Math.round(((completedCourses + existingCount) / courses.length) * 100);
           setPrefetchProgress(totalProgress);
+        }).catch(error => {
+          console.error('Error during prefetch:', error);
+          // Return empty data to continue execution
+          return { courses: {} };
         });
         
         // Merge new data with existing data

@@ -10,27 +10,27 @@ export interface PrefetchedData {
 
 export async function prefetchAllCourseData(
   courses: { id: string }[],
-  onProgress?: (completedCount: number) => void
+  onProgress: (progress: number) => void
 ): Promise<PrefetchedData> {
-  const courseData: PrefetchedData = {
+  const prefetchedData: PrefetchedData = {
     timestamp: Date.now(),
     courses: {}
   };
 
-  let completedCount = 0;
-
-  // Fetch data for all courses in parallel
-  const promises = courses.map(async (course) => {
+  let completed = 0;
+  
+  // Process courses sequentially to avoid overwhelming the API
+  for (const course of courses) {
     try {
       const data = await fetchCourseData(course.id);
-      courseData.courses[course.id] = data;
-      completedCount++;
-      onProgress?.(completedCount);
+      prefetchedData.courses[course.id] = data;
     } catch (error) {
-      console.error(`Error fetching data for course ${course.id}:`, error);
+      console.warn(`Failed to fetch data for course ${course.id}:`, error);
+      // Continue with next course even if this one failed
     }
-  });
+    completed++;
+    onProgress(completed);
+  }
 
-  await Promise.all(promises);
-  return courseData;
+  return prefetchedData;
 } 
