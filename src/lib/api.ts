@@ -141,14 +141,24 @@ export async function fetchCourseData(courseName: string): Promise<CourseEnrollm
 
     const currentTerm = month >= 8 ? `${year}08` : `${year}02`;
     const pastTerm = month >= 8 ? `${year}02` : `${year - 1}08`;
+    const oneYearBack = month >= 8 ? `${year - 1}08` : `${year - 1}02`;
+    const threeTermsBack = month >= 8 ? `${year - 1}02` : `${year - 2}08`;
 
     try {
-        const [currentTermData, pastTermData] = await Promise.all([
+        const [currentTermData, pastTermData, oneYearBackTermData, threeTermBackData] = await Promise.all([
             termTotalEnrollment(currentTerm, courseName).catch(() => ({
                 'Enrollment Actual': 0,
                 'Enrollment Maximum': 0
             })),
             termTotalEnrollment(pastTerm, courseName).catch(() => ({
+                'Enrollment Actual': 0,
+                'Enrollment Maximum': 0
+            })),
+            termTotalEnrollment(oneYearBack, courseName).catch(() => ({
+                'Enrollment Actual': 0,
+                'Enrollment Maximum': 0
+            })),
+            termTotalEnrollment(threeTermsBack, courseName).catch(() => ({
                 'Enrollment Actual': 0,
                 'Enrollment Maximum': 0
             }))
@@ -157,8 +167,8 @@ export async function fetchCourseData(courseName: string): Promise<CourseEnrollm
         const data = {
             currentEnrollment: currentTermData['Enrollment Actual'],
             pastEnrollment: pastTermData['Enrollment Actual'],
-            yearAgoEnrollment: currentTermData['Enrollment Actual'] - pastTermData['Enrollment Actual'],
-            threeTermsAgoEnrollment: currentTermData['Enrollment Actual'] - pastTermData['Enrollment Actual'] - (currentTermData['Enrollment Actual'] - pastTermData['Enrollment Actual'])
+            yearAgoEnrollment: oneYearBackTermData['Enrollment Actual'],
+            threeTermsAgoEnrollment: threeTermBackData['Enrollment Actual']
         };
 
         courseDataCache.set(courseName, {
