@@ -158,7 +158,7 @@ const PreReqChart = () => {
         };
 
         // Fetch missing courses
-        //const totalCourses = coursesToFetch.length;
+        const totalToFetch = coursesToFetch.length;
         let completedCourses = 0;
         
         const fetchedData = await prefetchAllCourseData(coursesToFetch, (progress) => {
@@ -419,10 +419,10 @@ const PreReqChart = () => {
       {/* Main Content */}
       <main className="pt-16 pb-16 h-full">
         {isPrefetching && (
-          <div className="fixed top-20 right-4 bg-white p-4 rounded-lg shadow-lg z-50">
+          <div className="fixed top-20 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg z-50 transition-colors duration-200">
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-              <span>Prefetching course data: {prefetchProgress}%</span>
+              <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent dark:border-blue-400 dark:border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-gray-700 dark:text-gray-200">Prefetching course data: {prefetchProgress}%</span>
             </div>
           </div>
         )}
@@ -633,11 +633,16 @@ const PreReqChart = () => {
                   <div className={`w-12 h-12 border-4 ${darkMode ? 'border-gray-700 border-t-gray-300' : 'border-blue-200 border-t-blue-500'} rounded-full animate-spin`}></div>
                 </div>
               ) : enrollmentData ? (
-                <div className="space-y-2">
-                  <p>Current Semester Students Enrolled: {enrollmentData.currentEnrollment}</p>
-                  <p>Previous Semester Students Enrolled: {enrollmentData.pastEnrollment}</p>
-                  <p>One Year Ago Semester Students Enrolled: {enrollmentData.oneYearBackEnrollment}</p>
-                  <p>One Year and One Semester Ago Semester Students Enrolled: {enrollmentData.oneYearOneSemBackEnrollment}</p>
+                <div className="space-y-4">
+                  <h3 className={`text-lg font-semibold ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                    Student Enrollment Data
+                  </h3>
+                  <div className="space-y-2">
+                    <p>Current Semester: {enrollmentData.currentEnrollment || 'N/A'}</p>
+                    <p>Previous Semester: {enrollmentData.pastEnrollment || 'N/A'}</p>
+                    <p>One Year Ago: {enrollmentData.yearAgoEnrollment || 'N/A'}</p>
+                    <p>Three Semesters Ago: {enrollmentData.threeTermsAgoEnrollment || 'N/A'}</p>
+                  </div>
                 </div>
               ) : (
                 <p className="text-red-500">Error loading course data</p>
