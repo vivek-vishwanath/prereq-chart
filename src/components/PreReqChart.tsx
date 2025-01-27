@@ -158,6 +158,7 @@ const PreReqChart = () => {
         };
 
         // Fetch missing courses
+        // comment
         const totalCourses = coursesToFetch.length;
         let completedCourses = 0;
         
