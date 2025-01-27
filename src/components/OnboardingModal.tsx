@@ -17,8 +17,10 @@ const OnboardingModal = ({ darkMode, onClose }: OnboardingModalProps) => {
             This interactive flowchart helps you understand course prerequisites at Georgia Tech.
           </p>
           <div className="space-y-2">
-            <h3 className="font-semibold">How to use:</h3>
-            <ul className="list-disc pl-5 space-y-1">
+            <h3 className={`font-semibold ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+              How to use:
+            </h3>
+            <ul className={`list-disc pl-5 space-y-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               <li>Click on any course box to view enrollment data</li>
               <li>Use the zoom controls to adjust the view</li>
               <li>Drag the chart to pan around</li>
