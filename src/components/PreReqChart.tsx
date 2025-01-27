@@ -158,12 +158,12 @@ const PreReqChart = () => {
         };
 
         // Fetch missing courses
-        const totalToFetch = coursesToFetch.length;
+        const totalCourses = coursesToFetch.length;
         let completedCourses = 0;
         
         const fetchedData = await prefetchAllCourseData(coursesToFetch, (progress) => {
           completedCourses = progress;
-          const existingCount = courses.length - totalToFetch;
+          const existingCount = courses.length - totalCourses;
           const totalProgress = Math.round(((completedCourses + existingCount) / courses.length) * 100);
           setPrefetchProgress(totalProgress);
         });
