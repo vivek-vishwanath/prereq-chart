@@ -6,6 +6,8 @@ import data from "../../data/course.json";
 import { fetchCourseData } from '@/lib/api';
 import type { CourseEnrollmentData } from '@/lib/api';
 import { prefetchAllCourseData, type PrefetchedData } from '@/lib/prefetch';
+import Sidebar from './Sidebar';
+import OnboardingModal from './OnboardingModal';
 
 type CourseType = 'required' | 'intelligence' | 'information' | undefined;
 
@@ -106,6 +108,11 @@ const PreReqChart = () => {
   const popupRef = useRef<HTMLDivElement>(null);
   const [prefetchedData, setPrefetchedData] = useState<PrefetchedData | null>(null);
   const [prefetchErrors, setPrefetchErrors] = useState<Record<string, boolean>>({});
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    showIntelligence: true,
+    showInformation: true
+  });
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -357,45 +364,76 @@ const PreReqChart = () => {
     setEnrollmentData(null);
   };
 
+  // Add filter handler
+  const handleFilterChange = (key: keyof typeof filters) => {
+    setFilters(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
+  // Filter courses based on thread visibility
+  const visibleCourses = courses.filter(course => {
+    if (course.type === 'intelligence' && !filters.showIntelligence) return false;
+    if (course.type === 'information' && !filters.showInformation) return false;
+    return true;
+  });
+
+  // Filter prerequisites based on visible courses
+  const visiblePrereqs = prereqs.filter(prereq => {
+    const fromCourse = courses.find(c => c.id === prereq.from);
+    const toCourse = courses.find(c => c.id === prereq.to);
+    
+    // Check if both courses exist and are visible
+    if (!fromCourse || !toCourse) return false;
+    
+    // If either course is filtered out, don't show the arrow
+    if (fromCourse.type === 'intelligence' && !filters.showIntelligence) return false;
+    if (fromCourse.type === 'information' && !filters.showInformation) return false;
+    if (toCourse.type === 'intelligence' && !filters.showIntelligence) return false;
+    if (toCourse.type === 'information' && !filters.showInformation) return false;
+    
+    return true;
+  });
+
   return (
     <div className="fixed inset-0 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+      {/* Sidebar */}
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        darkMode={darkMode}
+        filters={filters}
+        onFilterChange={handleFilterChange}
+      />
+
       {/* Onboarding Modal */}
       {showOnboarding && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-lg mx-4">
-            <h2 className="text-2xl font-bold mb-4 dark:text-white">Welcome to GT Course Prerequisites</h2>
-            <div className="space-y-4 text-gray-600 dark:text-gray-300">
-              <p>This interactive flowchart helps you understand course prerequisites at Georgia Tech.</p>
-              <div className="space-y-2">
-                <h3 className="font-semibold text-gray-800 dark:text-gray-100">How to use:</h3>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Click on any course box to view enrollment data</li>
-                  <li>Use the zoom controls to adjust the view</li>
-                  <li>Drag the chart to pan around</li>
-                  <li>Follow the arrows to understand prerequisites</li>
-                  <li>Toggle dark mode for better viewing at night</li>
-                </ul>
-              </div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Note: Diamond shapes represent AND/OR logic for prerequisites
-              </p>
-            </div>
-            <button
-              onClick={() => setShowOnboarding(false)}
-              className="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors w-full"
-            >
-              Get Started
-            </button>
-          </div>
-        </div>
+        <OnboardingModal
+          darkMode={darkMode}
+          onClose={() => setShowOnboarding(false)}
+        />
       )}
 
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 shadow-md z-20 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
-          <h1 className={`text-2xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
-            School of Computing Instruction Course Tree
-          </h1>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className={`p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                darkMode ? 'text-gray-400' : 'text-gray-600'
+              }`}
+              aria-label="Toggle sidebar"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <h1 className={`text-2xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+              GradGT - CS
+            </h1>
+          </div>
           
           {/* Theme Toggle Button */}
           <button
@@ -491,7 +529,7 @@ const PreReqChart = () => {
               </marker>
             </defs>
 
-            {prereqs.map((prereq, index) => {
+            {visiblePrereqs.map((prereq, index) => {
               const fromCourse = courses.find((c) => c.id === prereq.from);
               const toCourse = courses.find((c) => c.id === prereq.to);
 
@@ -510,7 +548,7 @@ const PreReqChart = () => {
               return null;
             })}
 
-            {courses.map((course) => {
+            {visibleCourses.map((course) => {
               // Special rendering for AND/OR nodes
               if (course.id === "&" || course.id === "OR") {
                 const size = 40;
