@@ -113,6 +113,7 @@ const PreReqChart = () => {
     showIntelligence: true,
     showInformation: true
   });
+  const [highlightedCourse, setHighlightedCourse] = useState<string | null>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -396,6 +397,219 @@ const PreReqChart = () => {
     return true;
   });
 
+  // Function to get all prerequisites for a course (recursive)
+  const getAllPrerequisites = (courseId: string, visited = new Set<string>()): Set<string> => {
+    if (visited.has(courseId)) return visited;
+    visited.add(courseId);
+    
+    prereqs.forEach(prereq => {
+      if (prereq.to === courseId) {
+        getAllPrerequisites(prereq.from, visited);
+      }
+    });
+    
+    return visited;
+  };
+
+  // Function to check if a course should be highlighted
+  const shouldHighlight = (courseId: string): boolean => {
+    if (!highlightedCourse) return true;
+    const prerequisites = getAllPrerequisites(highlightedCourse);
+    return prerequisites.has(courseId);
+  };
+
+  // Update course rendering to include highlighting
+  const renderCourse = (course: Course) => {
+    const isHighlighted = shouldHighlight(course.id);
+    const opacity = isHighlighted ? "1" : "0.3";
+
+    // Special rendering for AND/OR nodes
+    if (course.id === "&" || course.id === "OR") {
+      const size = 40;
+      return (
+        <g 
+          key={course.id}
+          style={{ transition: 'opacity 0.3s ease' }}
+          opacity={opacity}
+        >
+          <path
+            d={`M ${course.x * 192} ${course.y * 96 - size/2} 
+                L ${course.x * 192 + size/2} ${course.y * 96}
+                L ${course.x * 192} ${course.y * 96 + size/2}
+                L ${course.x * 192 - size/2} ${course.y * 96}
+                Z`}
+            fill={darkMode ? "#1f2937" : "#f3f4f6"}
+            stroke={darkMode ? "#4b5563" : "#9ca3af"}
+            strokeWidth="2"
+            className="transition-colors duration-200"
+          />
+          <text
+            x={course.x * 192}
+            y={course.y * 96 + 6}
+            textAnchor="middle"
+            className="text-sm font-bold"
+            fill={darkMode ? "#e5e7eb" : "#4b5563"}
+          >
+            {course.id === "&" ? "AND" : "OR"}
+          </text>
+        </g>
+      );
+    }
+
+    // Regular course rendering
+    return (
+      <g 
+        key={course.id} 
+        onClick={() => handleCourseClick(course)}
+        onMouseEnter={() => setHighlightedCourse(course.id)}
+        onMouseLeave={() => setHighlightedCourse(null)}
+        style={{ transition: 'opacity 0.3s ease' }}
+        opacity={opacity}
+      >
+        <rect
+          x={course.x * 192 - BOX_WIDTH / 2}
+          y={course.y * 96 - BOX_HEIGHT / 2}
+          width={BOX_WIDTH}
+          height={BOX_HEIGHT}
+          rx={CORNER_RADIUS}
+          ry={CORNER_RADIUS}
+          fill={course.type ? (darkMode ? COLORS[course.type].dark.bg : COLORS[course.type].light.bg) : (darkMode ? "#1f2937" : "white")}
+          stroke={prefetchErrors[course.id] ? "#ef4444" : (darkMode ? "#4b5563" : "#e5e7eb")}
+          strokeWidth={prefetchErrors[course.id] ? "3" : "2"}
+          className="cursor-pointer transition-colors duration-200"
+        />
+
+        <line
+          x1={course.x * 192 - BOX_WIDTH / 2 + CORNER_RADIUS}
+          y1={course.y * 96 - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT}
+          x2={course.x * 192 + BOX_WIDTH / 2 - CORNER_RADIUS}
+          y2={course.y * 96 - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT}
+          stroke={darkMode ? "#4b5563" : "#e5e7eb"}
+          strokeWidth="1"
+        />
+
+        <text
+          x={course.x * 192}
+          y={course.y * 96 - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT/2 + 6}
+          textAnchor="middle"
+          fill={course.type ? (darkMode ? COLORS[course.type].dark.text : COLORS[course.type].light.text) : (darkMode ? "#f3f4f6" : "#111827")}
+          className="text-base font-bold"
+        >
+          {course.id}
+        </text>
+
+        <foreignObject
+          x={course.x * 192 - BOX_WIDTH / 2 + 10}
+          y={course.y * 96 - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT + 5}
+          width={BOX_WIDTH - 20}
+          height={BOX_HEIGHT - ID_SECTION_HEIGHT - 10}
+        >
+          <div className={`text-center text-sm ${
+            course.type 
+              ? (darkMode ? `text-${course.type === 'required' ? 'amber' : course.type === 'intelligence' ? 'emerald' : 'orange'}-200` 
+                        : `text-${course.type === 'required' ? 'amber' : course.type === 'intelligence' ? 'emerald' : 'orange'}-900`)
+              : (darkMode ? 'text-gray-300' : 'text-gray-600')
+          }`}
+               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+            {course.name}
+          </div>
+        </foreignObject>
+      </g>
+    );
+  };
+
+  // Update arrow rendering to include highlighting
+  const renderArrow = (prereq: Prereq, index: number) => {
+    const fromCourse = courses.find((c) => c.id === prereq.from);
+    const toCourse = courses.find((c) => c.id === prereq.to);
+
+    if (fromCourse && toCourse) {
+      const isHighlighted = highlightedCourse && 
+        shouldHighlight(toCourse.id) && 
+        shouldHighlight(fromCourse.id);
+      const opacity = !highlightedCourse || isHighlighted ? "1" : "0.1";
+
+      return (
+        <path
+          key={`arrow-${index}`}
+          d={createPath(fromCourse, toCourse, prereq)}
+          fill="none"
+          stroke={darkMode ? "#9ca3af" : "#666"}
+          strokeWidth="3"
+          markerEnd="url(#arrowhead)"
+          style={{ transition: 'opacity 0.3s ease' }}
+          opacity={opacity}
+        />
+      );
+    }
+    return null;
+  };
+
+  // Update popup positioning to be next to the course
+  const getPopupPosition = (course: Course) => {
+    const x = course.x * 192;
+    const y = course.y * 96;
+    const svgRect = svgRef.current?.getBoundingClientRect();
+    
+    if (!svgRect) return { left: '50%', top: '50%', transform: 'translate(-50%, -50%)' };
+
+    const courseX = (x * transform.scale + transform.x);
+    const courseY = (y * transform.scale + transform.y);
+
+    // Position the popup to the right of the course by default
+    let left = courseX + (BOX_WIDTH / 2 * transform.scale) + 20;
+    let top = courseY - 100;
+
+    // If the popup would go off the right edge, position it to the left of the course
+    if (left + 500 > window.innerWidth) {
+      left = courseX - (BOX_WIDTH / 2 * transform.scale) - 520;
+    }
+
+    return {
+      left: `${left}px`,
+      top: `${top}px`,
+      transform: 'none'
+    };
+  };
+
+  // Function to get prerequisites with logical relationships
+  const getPrerequisites = (courseId: string) => {
+    const prereqGroups: {
+      direct: string[];
+      andGroups: { [key: string]: string[] };
+      orGroups: { [key: string]: string[] };
+    } = {
+      direct: [],
+      andGroups: {},
+      orGroups: {}
+    };
+
+    // First, find all direct connections to AND/OR nodes
+    const logicNodes = prereqs
+      .filter(prereq => prereq.to === courseId && (prereq.from.includes('&') || prereq.from.includes('OR')))
+      .map(prereq => prereq.from);
+
+    // For each logic node, find its prerequisites
+    logicNodes.forEach(nodeId => {
+      const nodePrereqs = prereqs
+        .filter(prereq => prereq.to === nodeId)
+        .map(prereq => prereq.from);
+      
+      if (nodeId.includes('&')) {
+        prereqGroups.andGroups[nodeId] = nodePrereqs;
+      } else if (nodeId.includes('OR')) {
+        prereqGroups.orGroups[nodeId] = nodePrereqs;
+      }
+    });
+
+    // Find direct prerequisites (not through AND/OR)
+    prereqGroups.direct = prereqs
+      .filter(prereq => prereq.to === courseId && !prereq.from.includes('&') && !prereq.from.includes('OR'))
+      .map(prereq => prereq.from);
+
+    return prereqGroups;
+  };
+
   return (
     <div className="fixed inset-0 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       {/* Sidebar */}
@@ -525,120 +739,20 @@ const PreReqChart = () => {
                 orient="auto"
                 markerUnits="userSpaceOnUse"
               >
-                <path d="M0,0 L12,4 L0,8 L3,4 Z" fill={darkMode ? "#9ca3af" : "#666"} />
+                <path d="M0,0 L12,4 L0,8 L3,4 Z" fill={darkMode ? "#9ca3af" : "#666"} strokeWidth="3" />
               </marker>
             </defs>
 
-            {visiblePrereqs.map((prereq, index) => {
-              const fromCourse = courses.find((c) => c.id === prereq.from);
-              const toCourse = courses.find((c) => c.id === prereq.to);
+            {visiblePrereqs.map((prereq, index) => renderArrow(prereq, index))}
 
-              if (fromCourse && toCourse) {
-                return (
-                  <path
-                    key={`arrow-${index}`}
-                    d={createPath(fromCourse, toCourse, prereq as Prereq)}
-                    fill="none"
-                    stroke={darkMode ? "#9ca3af" : "#666"}
-                    strokeWidth="2"
-                    markerEnd="url(#arrowhead)"
-                  />
-                );
-              }
-              return null;
-            })}
-
-            {visibleCourses.map((course) => {
-              // Special rendering for AND/OR nodes
-              if (course.id === "&" || course.id === "OR") {
-                const size = 40;
-                return (
-                  <g key={course.id}>
-                    <path
-                      d={`M ${course.x * 192} ${course.y * 96 - size/2} 
-                          L ${course.x * 192 + size/2} ${course.y * 96}
-                          L ${course.x * 192} ${course.y * 96 + size/2}
-                          L ${course.x * 192 - size/2} ${course.y * 96}
-                          Z`}
-                      fill={darkMode ? "#1f2937" : "#f3f4f6"}
-                      stroke={darkMode ? "#4b5563" : "#9ca3af"}
-                      strokeWidth="2"
-                      className="transition-colors duration-200"
-                    />
-                    <text
-                      x={course.x * 192}
-                      y={course.y * 96 + 6}
-                      textAnchor="middle"
-                      className="text-sm font-bold"
-                      fill={darkMode ? "#e5e7eb" : "#4b5563"}
-                    >
-                      {course.id === "&" ? "AND" : "OR"}
-                    </text>
-                  </g>
-                );
-              }
-
-              // Regular course rendering
-              return (
-                <g key={course.id} onClick={() => handleCourseClick(course)}>
-                  <rect
-                    x={course.x * 192 - BOX_WIDTH / 2}
-                    y={course.y * 96 - BOX_HEIGHT / 2}
-                    width={BOX_WIDTH}
-                    height={BOX_HEIGHT}
-                    rx={CORNER_RADIUS}
-                    ry={CORNER_RADIUS}
-                    fill={course.type ? (darkMode ? COLORS[course.type].dark.bg : COLORS[course.type].light.bg) : (darkMode ? "#1f2937" : "white")}
-                    stroke={prefetchErrors[course.id] ? "#ef4444" : (darkMode ? "#4b5563" : "#e5e7eb")}
-                    strokeWidth={prefetchErrors[course.id] ? "3" : "2"}
-                    className="cursor-pointer transition-colors duration-200"
-                  />
-
-                  <line
-                    x1={course.x * 192 - BOX_WIDTH / 2 + CORNER_RADIUS}
-                    y1={course.y * 96 - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT}
-                    x2={course.x * 192 + BOX_WIDTH / 2 - CORNER_RADIUS}
-                    y2={course.y * 96 - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT}
-                    stroke={darkMode ? "#4b5563" : "#e5e7eb"}
-                    strokeWidth="1"
-                  />
-
-                  <text
-                    x={course.x * 192}
-                    y={course.y * 96 - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT/2 + 6}
-                    textAnchor="middle"
-                    fill={course.type ? (darkMode ? COLORS[course.type].dark.text : COLORS[course.type].light.text) : (darkMode ? "#f3f4f6" : "#111827")}
-                    className="text-base font-bold"
-                  >
-                    {course.id}
-                  </text>
-
-                  <foreignObject
-                    x={course.x * 192 - BOX_WIDTH / 2 + 10}
-                    y={course.y * 96 - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT + 5}
-                    width={BOX_WIDTH - 20}
-                    height={BOX_HEIGHT - ID_SECTION_HEIGHT - 10}
-                  >
-                    <div className={`text-center text-sm ${
-                      course.type 
-                        ? (darkMode ? `text-${course.type === 'required' ? 'amber' : course.type === 'intelligence' ? 'emerald' : 'orange'}-200` 
-                                  : `text-${course.type === 'required' ? 'amber' : course.type === 'intelligence' ? 'emerald' : 'orange'}-900`)
-                        : (darkMode ? 'text-gray-300' : 'text-gray-600')
-                    }`}
-                         style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                      {course.name}
-                    </div>
-                  </foreignObject>
-                </g>
-              );
-            })}
+            {visibleCourses.map((course) => renderCourse(course))}
           </g>
         </svg>
       </main>
 
       {/* Footer */}
       <footer className="fixed bottom-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 shadow-md z-20 transition-colors duration-200">
-        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-center">
+        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
           <div className="flex items-center gap-4">
             <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               Made by{' '}
@@ -647,7 +761,7 @@ const PreReqChart = () => {
                 Vineeth Sendilraj
               </a>
               ,{' '}
-              <a href="https://www.linkedin.com/in/vivek/" target="_blank" rel="noopener noreferrer"
+              <a href="https://www.linkedin.com/in/vivek-vishwanath1/" target="_blank" rel="noopener noreferrer"
                  className={`underline ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}>
                 Vivek
               </a>
@@ -659,13 +773,29 @@ const PreReqChart = () => {
               , under the direction of Mary Hudachek-Buswell 
             </span>
           </div>
+          <a
+            href="https://github.com/VineethSendilraj/GradGT"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`flex items-center gap-2 ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}
+            title="View source on GitHub"
+          >
+            <svg height="24" viewBox="0 0 16 16" version="1.1" width="24" aria-hidden="true">
+              <path fillRule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" fill="currentColor"></path>
+            </svg>
+            <span className="text-sm">Source</span>
+          </a>
         </div>
       </footer>
 
       {/* Popup with dark mode support */}
       {selectedCourse && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-          <Card className={`w-[500px] ${darkMode ? 'bg-gray-800 text-gray-100' : 'bg-white'}`} ref={popupRef}>
+        <div 
+          className="fixed z-20"
+          style={getPopupPosition(selectedCourse)}
+          ref={popupRef}
+        >
+          <Card className={`w-[500px] ${darkMode ? 'bg-gray-800 text-gray-100' : 'bg-white'}`}>
             <CardHeader>
               <CardTitle>{selectedCourse.id} - {selectedCourse.name}</CardTitle>
             </CardHeader>
@@ -675,15 +805,67 @@ const PreReqChart = () => {
                   <div className={`w-12 h-12 border-4 ${darkMode ? 'border-gray-700 border-t-gray-300' : 'border-blue-200 border-t-blue-500'} rounded-full animate-spin`}></div>
                 </div>
               ) : enrollmentData ? (
-                <div className="space-y-4">
-                  <h3 className={`text-lg font-semibold ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                    Student Enrollment Data
-                  </h3>
-                  <div className="space-y-2">
-                    <p>Current Semester: {enrollmentData.currentEnrollment || 'N/A'}</p>
-                    <p>Previous Semester: {enrollmentData.pastEnrollment || 'N/A'}</p>
-                    <p>One Year Ago: {enrollmentData.yearAgoEnrollment || 'N/A'}</p>
-                    <p>Three Semesters Ago: {enrollmentData.threeTermsAgoEnrollment || 'N/A'}</p>
+                <div className="space-y-6">
+                  <div>
+                    <h3 className={`text-lg font-semibold mb-2 ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                      Prerequisites
+                    </h3>
+                    <div className="space-y-2">
+                      {(() => {
+                        const prereqGroups = getPrerequisites(selectedCourse.id);
+                        
+                        if (prereqGroups.direct.length === 0 && 
+                            Object.keys(prereqGroups.andGroups).length === 0 && 
+                            Object.keys(prereqGroups.orGroups).length === 0) {
+                          return <p className="text-gray-500 dark:text-gray-400">No prerequisites</p>;
+                        }
+
+                        return (
+                          <div className="space-y-3">
+                            {prereqGroups.direct.length > 0 && (
+                              <div>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Required:</p>
+                                <ul className="list-disc pl-5 mt-1">
+                                  {prereqGroups.direct.map(courseId => (
+                                    <li key={courseId}>{courseId}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {Object.entries(prereqGroups.andGroups).map(([nodeId, courses], index) => (
+                              <div key={nodeId}>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Must complete all:</p>
+                                <p className="pl-5 mt-1">
+                                  {courses.join(' AND ')}
+                                </p>
+                              </div>
+                            ))}
+
+                            {Object.entries(prereqGroups.orGroups).map(([nodeId, courses], index) => (
+                              <div key={nodeId}>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Must complete one of:</p>
+                                <p className="pl-5 mt-1">
+                                  {courses.join(' OR ')}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className={`text-lg font-semibold mb-2 ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                      Enrollment History
+                    </h3>
+                    <div className="space-y-2">
+                      <p>Current Semester: {enrollmentData.currentEnrollment || 'N/A'}</p>
+                      <p>Previous Semester: {enrollmentData.pastEnrollment || 'N/A'}</p>
+                      <p>One Year Ago: {enrollmentData.yearAgoEnrollment || 'N/A'}</p>
+                      <p>Three Semesters Ago: {enrollmentData.threeTermsAgoEnrollment || 'N/A'}</p>
+                    </div>
                   </div>
                 </div>
               ) : (

@@ -30,7 +30,7 @@
     },
     {
       "id": "MATH 2552",
-      "name": "DIfferential Equations",
+      "name": "Differential Equations",
       "x": 3,
       "y": 0,
       "type": "required"
@@ -125,7 +125,7 @@
       "type": "information"
     },
     {
-      "id": "CS 3235",
+      "id": "CS 4235",
       "name": "Introduction to Information Security",
       "x": 6,
       "y": 11,
@@ -402,6 +402,10 @@
     {
       "from": "CS 3600",
       "to": "CS 4650"
+    },
+    {
+      "from": "CS 3600",
+      "to": "CS 4731"
     }
   ]
 }
