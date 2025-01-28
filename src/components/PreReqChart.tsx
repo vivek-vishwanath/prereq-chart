@@ -558,7 +558,7 @@ const PreReqChart = () => {
 
     // Position the popup to the right of the course by default
     let left = courseX + (BOX_WIDTH / 2 * transform.scale) + 20;
-    let top = courseY - 100;
+    const top = courseY - 100;
 
     // If the popup would go off the right edge, position it to the left of the course
     if (left + 500 > window.innerWidth) {
@@ -833,7 +833,7 @@ const PreReqChart = () => {
                               </div>
                             )}
 
-                            {Object.entries(prereqGroups.andGroups).map(([nodeId, courses], index) => (
+                            {Object.entries(prereqGroups.andGroups).map(([nodeId, courses]) => (
                               <div key={nodeId}>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">Must complete all:</p>
                                 <p className="pl-5 mt-1">
@@ -842,7 +842,7 @@ const PreReqChart = () => {
                               </div>
                             ))}
 
-                            {Object.entries(prereqGroups.orGroups).map(([nodeId, courses], index) => (
+                            {Object.entries(prereqGroups.orGroups).map(([nodeId, courses]) => (
                               <div key={nodeId}>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">Must complete one of:</p>
                                 <p className="pl-5 mt-1">
