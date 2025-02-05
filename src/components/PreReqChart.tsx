@@ -59,9 +59,8 @@ interface CourseData {
 
 // Cast the data with unknown first to avoid type errors
 const courseData = data as unknown as CourseData;
-let { courses, prereqs, threads } = courseData;
-
-threads = threads.map((t) => ({
+const { courses, prereqs } = courseData;
+const threads = courseData.threads.map((t) => ({
   ...t,
   show: true  // Show all threads by default
 }));
