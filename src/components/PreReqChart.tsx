@@ -585,6 +585,53 @@ const PreReqChart = () => {
     return prerequisites.has(courseId);
   };
 
+  // Function to get prerequisites with logical relationships
+  const getPrerequisites = (courseId: string) => {
+    const prereqGroups: {
+      direct: string[];
+      andGroups: { [key: string]: string[] };
+      orGroups: { [key: string]: string[] };
+    } = {
+      direct: [],
+      andGroups: {},
+      orGroups: {}
+    };
+
+    // First, find all direct connections to AND/OR nodes
+    const directPrereqs = prereqs.filter(prereq => prereq.to === courseId);
+
+    directPrereqs.forEach(prereq => {
+      const fromCourse = courses.find(c => c.id === prereq.from);
+
+      if (!fromCourse) return;
+
+      // If it's an AND node (starts with &)
+      if (fromCourse.id.startsWith('&')) {
+        // Find all prerequisites of this AND node
+        const andPrereqs = prereqs
+          .filter(p => p.to === fromCourse.id)
+          .map(p => p.from);
+
+        prereqGroups.andGroups[fromCourse.id] = andPrereqs;
+      }
+      // If it's an OR node (starts with |)
+      else if (fromCourse.id.startsWith('|')) {
+        // Find all prerequisites of this OR node
+        const orPrereqs = prereqs
+          .filter(p => p.to === fromCourse.id)
+          .map(p => p.from);
+
+        prereqGroups.orGroups[fromCourse.id] = orPrereqs;
+      }
+      // Direct prerequisite
+      else {
+        prereqGroups.direct.push(fromCourse.id);
+      }
+    });
+
+    return prereqGroups;
+  };
+
   // Update course rendering to include highlighting
   const renderCourse = (course: Course) => {
     const isHighlighted = shouldHighlight(course.id);
@@ -764,44 +811,6 @@ const PreReqChart = () => {
     // };
   };
 
-  // Function to get prerequisites with logical relationships
-  const getPrerequisites = (courseId: string) => {
-    const prereqGroups: {
-      direct: string[];
-      andGroups: { [key: string]: string[] };
-      orGroups: { [key: string]: string[] };
-    } = {
-      direct: [],
-      andGroups: {},
-      orGroups: {}
-    };
-
-    // First, find all direct connections to AND/OR nodes
-    const logicNodes = prereqs
-      .filter(prereq => prereq.to === courseId && (prereq.from.includes('&') || prereq.from.includes('OR')))
-      .map(prereq => prereq.from);
-
-    // For each logic node, find its prerequisites
-    logicNodes.forEach(nodeId => {
-      const nodePrereqs = prereqs
-        .filter(prereq => prereq.to === nodeId)
-        .map(prereq => prereq.from);
-
-      if (nodeId.includes('&')) {
-        prereqGroups.andGroups[nodeId] = nodePrereqs;
-      } else if (nodeId.includes('OR')) {
-        prereqGroups.orGroups[nodeId] = nodePrereqs;
-      }
-    });
-
-    // Find direct prerequisites (not through AND/OR)
-    prereqGroups.direct = prereqs
-      .filter(prereq => prereq.to === courseId && !prereq.from.includes('&') && !prereq.from.includes('OR'))
-      .map(prereq => prereq.from);
-
-    return prereqGroups;
-  };
-
   // Reset handler that uses the same centering logic
   const handleReset = () => {
     const centerX = window.innerWidth / 2;
@@ -842,7 +851,7 @@ const PreReqChart = () => {
       <>
         <button
           onClick={() => setShowBubbles(!showBubbles)}
-          className={`fixed top-20 left-4 px-3 py-2 rounded-lg shadow-md z-20 transition-all duration-200 flex items-center gap-2 ${
+          className={`fixed top-20 right-4 px-3 py-2 rounded-lg shadow-md z-20 transition-all duration-200 flex items-center justify-center gap-2 w-40 ${
             darkMode ? 'bg-gray-800 text-gray-200 hover:bg-gray-700' : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
           } ${showBubbles ? 'ring-2 ring-blue-500 dark:ring-blue-400' : ''}`}
           title={showBubbles ? "Hide thread filters" : "Show thread filters"}
@@ -854,8 +863,8 @@ const PreReqChart = () => {
         </button>
         
         <div 
-          className={`fixed top-32 left-4 flex flex-col gap-1.5 z-10 transition-all duration-200 ${
-            showBubbles ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-full'
+          className={`fixed top-32 right-4 flex flex-col gap-1.5 z-10 transition-all duration-200 items-end ${
+            showBubbles ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
           }`}
         >
           {nonRequiredThreads.map(thread => {
@@ -863,12 +872,12 @@ const PreReqChart = () => {
             return (
               <div
                 key={thread.name}
-                className={className}
+                className={`${className} w-40 flex items-center justify-center`}
                 style={style}
                 onClick={() => handleFilterChange(thread.name)}
                 title={`Toggle ${thread.formalName}`}
               >
-                <span className="text-xs whitespace-nowrap">{thread.formalName}</span>
+                <span className="text-xs text-center">{thread.formalName}</span>
               </div>
             );
           })}
