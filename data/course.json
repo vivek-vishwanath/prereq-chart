@@ -731,6 +731,10 @@
       "to": "&1"
     },
     {
+      "from": "MATH 1554",
+      "to": "MATH 3406"
+    },
+    {
       "from": "&1",
       "to": "MATH 2552"
     },
@@ -760,7 +764,9 @@
     },
     {
       "from": "MATH 3012",
-      "to": "|1"
+      "to": "|1",
+      "fromSide": "bottom",
+      "toSide": "top"
     },
     {
       "from": "CS 2050",
@@ -1023,8 +1029,9 @@
       "to": "CS 4243"
     }
   ],
-  "threads": {
-    "required": {
+  "threads": [
+    {
+      "name": "required",
       "light": {
         "bg": "#fbbf24",
         "text": "#78350f",
@@ -1036,7 +1043,9 @@
         "textSecondary": "#fcd34d"
       }
     },
-    "intel": {
+    {
+      "formalName": "Intelligence",
+      "name": "intel",
       "light": {
         "bg": "#34d399",
         "text": "#064e3b",
@@ -1048,7 +1057,107 @@
         "textSecondary": "#6ee7b7"
       }
     },
-    "info": {
+    {
+      "formalName": "Information Internetworks",
+      "name": "info",
+      "light": {
+        "bg": "#fb923c",
+        "text": "#7c2d12",
+        "textSecondary": "#9a3412"
+      },
+      "dark": {
+        "bg": "#7c2d12",
+        "text": "#fb923c",
+        "textSecondary": "#fdba74"
+      }
+    },
+    {
+      "formalName": "Theory",
+      "name": "theory",
+      "light": {
+        "bg": "#fb923c",
+        "text": "#7c2d12",
+        "textSecondary": "#9a3412"
+      },
+      "dark": {
+        "bg": "#7c2d12",
+        "text": "#fb923c",
+        "textSecondary": "#fdba74"
+      }
+    },
+    {
+      "formalName": "Modeling & Simulation",
+      "name": "mod-sim",
+      "light": {
+        "bg": "#fb923c",
+        "text": "#7c2d12",
+        "textSecondary": "#9a3412"
+      },
+      "dark": {
+        "bg": "#7c2d12",
+        "text": "#fb923c",
+        "textSecondary": "#fdba74"
+      }
+    },
+    {
+      "formalName": "Systems & Architecture",
+      "name": "sys-arch",
+      "light": {
+        "bg": "#fb923c",
+        "text": "#7c2d12",
+        "textSecondary": "#9a3412"
+      },
+      "dark": {
+        "bg": "#7c2d12",
+        "text": "#fb923c",
+        "textSecondary": "#fdba74"
+      }
+    },
+    {
+      "formalName": "Devices",
+      "name": "devices",
+      "light": {
+        "bg": "#fb923c",
+        "text": "#7c2d12",
+        "textSecondary": "#9a3412"
+      },
+      "dark": {
+        "bg": "#7c2d12",
+        "text": "#fb923c",
+        "textSecondary": "#fdba74"
+      }
+    },
+    {
+      "formalName": "People",
+      "name": "people",
+      "light": {
+        "bg": "#fb923c",
+        "text": "#7c2d12",
+        "textSecondary": "#9a3412"
+      },
+      "dark": {
+        "bg": "#7c2d12",
+        "text": "#fb923c",
+        "textSecondary": "#fdba74"
+      }
+    },
+    {
+      "formalName": "Media",
+      "name": "media",
+      "light": {
+        "bg": "#fb923c",
+        "text": "#7c2d12",
+        "textSecondary": "#9a3412"
+      },
+      "dark": {
+        "bg": "#7c2d12",
+        "text": "#fb923c",
+        "textSecondary": "#fdba74"
+      }
+    },
+    {
+      "formalName": "Cybersecurity & Privacy",
+      "name": "cyber",
       "light": {
         "bg": "#fb923c",
         "text": "#7c2d12",
@@ -1060,5 +1169,5 @@
         "textSecondary": "#fdba74"
       }
     }
-  }
+  ]
 }

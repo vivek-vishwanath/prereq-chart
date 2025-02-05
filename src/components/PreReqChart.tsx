@@ -34,12 +34,33 @@ interface Prereq {
   toSide?: 'left' | 'right' | 'top' | 'bottom';
 }
 
+interface Theme {
+    bg: string;
+    text: string;
+    textSecondary: string;
+}
+
+interface ThemeModes {
+    light: Theme;
+    dark: Theme;
+}
+
+interface Thread {
+    name: CourseType;
+    formalName: string;
+    theme: ThemeModes;
+    show: boolean;
+}
+
 interface CourseData {
   courses: Course[];
   prereqs: Prereq[];
+  threads: Thread[];
 }
 
-const { courses, prereqs, threads } = data as CourseData;
+let {courses, prereqs, threads} = data as CourseData;
+
+threads = threads.map((t) => ({...t, show: true}))
 
 const COLORS = threads as const;
 
@@ -63,9 +84,9 @@ const PreReqChart = () => {
 
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [darkMode, setDarkMode] = useState(true);
-  const [transform, setTransform] = useState({ x: 0, y: 0, scale: 1 });
+  const [transform, setTransform] = useState({x: 0, y: 0, scale: 1});
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [dragStart, setDragStart] = useState({x: 0, y: 0});
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [enrollmentData, setEnrollmentData] = useState<CourseEnrollmentData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -76,11 +97,14 @@ const PreReqChart = () => {
   const [prefetchedData, setPrefetchedData] = useState<PrefetchedData | null>(null);
   const [prefetchErrors, setPrefetchErrors] = useState<Record<string, boolean>>({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    showIntelligence: true,
-    showInformation: true
-  });
+  const [filters, setFilters] = useState(threads);
   const [highlightedCourse, setHighlightedCourse] = useState<string | null>(null);
+
+  let threadMap = {};
+  for (let t in filters) {
+      threadMap[filters[t].name] = filters[t]
+  }
+  console.log(threadMap)
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -334,18 +358,23 @@ const PreReqChart = () => {
 
   // Add filter handler
   const handleFilterChange = (key: keyof typeof filters) => {
-    setFilters(prev => ({
-      ...prev,
-      [key]: !prev[key]
+    setFilters(filters.map((t) => {
+      return {...t, show: (t.name === key ? !t.show : t.show)}
     }));
   };
 
   // Filter courses based on thread visibility
   const visibleCourses = courses.filter(course => {
-    if (course.type === 'intelligence' && !filters.showIntelligence) return false;
-    if (course.type === 'information' && !filters.showInformation) return false;
-    return true;
-  });
+      for (let i in course.threads) {
+            for (let j in filters) {
+                let thread = threadMap[course.threads[i]];
+                if (thread === filters[j] && thread.show) {
+                    return true;
+                }
+            }
+        }
+        return course.name == "AND" || course.name == "OR";
+    });
 
   // Filter prerequisites based on visible courses
   const visiblePrereqs = prereqs.filter(prereq => {
@@ -355,14 +384,24 @@ const PreReqChart = () => {
     // Check if both courses exist and are visible
     if (!fromCourse || !toCourse) return false;
 
-    // If either course is filtered out, don't show the arrow
-    if (fromCourse.type === 'intelligence' && !filters.showIntelligence) return false;
-    if (fromCourse.type === 'information' && !filters.showInformation) return false;
-    if (toCourse.type === 'intelligence' && !filters.showIntelligence) return false;
-    if (toCourse.type === 'information' && !filters.showInformation) return false;
+        // If either course is filtered out, don't show the arrow
+        let show = false;
 
-    return true;
-  });
+        for (let i in fromCourse.threads) {
+            if (threadMap[fromCourse.threads[i]]?.show) {
+                show = true;
+                break;
+            }
+        }
+        if (fromCourse.name == "AND" || fromCourse.name == "OR") show = true;
+
+        for (let j in toCourse.threads) {
+            if (threadMap[toCourse.threads[j]]?.show) {
+                return show;
+            }
+        }
+        return toCourse.name == "AND" || toCourse.name == "OR";
+    });
 
   // Function to get all prerequisites for a course (recursive)
   const getAllPrerequisites = (courseId: string, visited = new Set<string>()): Set<string> => {
@@ -444,15 +483,15 @@ const PreReqChart = () => {
                   strokeWidth="1"
               />
 
-              <text
-                  x={course.x * HORIZONTAL_SPACING}
-                  y={course.y * VERTICAL_SPACING - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT/2 + 6}
-                  textAnchor="middle"
-                  fill={course.type ? (darkMode ? COLORS[course.type].dark.text : COLORS[course.type].light.text) : (darkMode ? "#f3f4f6" : "#111827")}
-                  className="text-base font-bold"
-              >
-                  {course.id}
-              </text>
+                <text
+                    x={course.x * HORIZONTAL_SPACING}
+                    y={course.y * VERTICAL_SPACING - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT / 2 + 6}
+                    textAnchor="middle"
+                    fill={course.threads[0] in COLORS ? (darkMode ? COLORS[course.threads[0]].dark.text : COLORS[course.threads[0]].light.text) : (darkMode ? "#f3f4f6" : "#111827")}
+                    className="text-base font-bold"
+                >
+                    {course.id}
+                </text>
 
               <foreignObject
                   x={course.x * HORIZONTAL_SPACING - BOX_WIDTH / 2 + 10}
@@ -585,93 +624,116 @@ const PreReqChart = () => {
         />
       )}
 
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 shadow-md z-20 transition-colors duration-200">
-        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className={`p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                darkMode ? 'text-gray-400' : 'text-gray-600'
-              }`}
-              aria-label="Toggle sidebar"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-            <h1 className={`text-2xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
-              GradGT - CS
-            </h1>
-          </div>
-          
-          {/* Theme Toggle Button */}
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className={`p-2 rounded-full transition-colors duration-200 ${
-              darkMode 
-                ? 'bg-gray-700 hover:bg-gray-600 text-gray-100' 
-                : 'bg-gray-100 hover:bg-gray-200 text-gray-900'
-            }`}
-            title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          >
-            {darkMode ? (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clipRule="evenodd" />
-              </svg>
-            )}
-          </button>
-        </div>
-      </header>
+            {/* Header */}
+            <header
+                className="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 shadow-md z-20 transition-colors duration-200">
+                <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                            className={`p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                                darkMode ? 'text-gray-400' : 'text-gray-600'
+                            }`}
+                            aria-label="Toggle sidebar"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                      d="M4 6h16M4 12h16M4 18h16"/>
+                            </svg>
+                        </button>
+                        <h1 className={`text-2xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+                            GradGT - CS
+                        </h1>
+                    </div>
 
-      {/* Main Content */}
-      <main className="pt-16 pb-16 h-full">
-        {isPrefetching && (
-          <div className="fixed top-20 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg z-50 transition-colors duration-200">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent dark:border-blue-400 dark:border-t-transparent rounded-full animate-spin"></div>
-              <span className="text-gray-700 dark:text-gray-200">Prefetching course data: {prefetchProgress}%</span>
-            </div>
-          </div>
-        )}
+                    {/* Theme Toggle Button */}
+                    <button
+                        onClick={() => setDarkMode(!darkMode)}
+                        className={`p-2 rounded-full transition-colors duration-200 ${
+                            darkMode
+                                ? 'bg-gray-700 hover:bg-gray-600 text-gray-100'
+                                : 'bg-gray-100 hover:bg-gray-200 text-gray-900'
+                        }`}
+                        title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                    >
+                        {darkMode ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                 className="w-5 h-5">
+                                <path
+                                    d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"/>
+                            </svg>
+                        ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                 className="w-5 h-5">
+                                <path fillRule="evenodd"
+                                      d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z"
+                                      clipRule="evenodd"/>
+                            </svg>
+                        )}
+                    </button>
+                </div>
+            </header>
 
-        {/* Zoom Controls */}
-        <div className="absolute bottom-20 right-4 flex flex-col gap-2 z-10">
-          <button
-            onClick={() => setTransform(prev => ({ ...prev, scale: Math.max(MIN_ZOOM, prev.scale - ZOOM_STEP) }))}
-            className="p-2.5 shadow rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 
+            {/* Main Content */}
+            <main className="pt-16 pb-16 h-full">
+                {isPrefetching && (
+                    <div
+                        className="fixed top-20 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg z-50 transition-colors duration-200">
+                        <div className="flex items-center gap-2">
+                            <div
+                                className="w-4 h-4 border-2 border-blue-500 border-t-transparent dark:border-blue-400 dark:border-t-transparent rounded-full animate-spin"></div>
+                            <span
+                                className="text-gray-700 dark:text-gray-200">Prefetching course data: {prefetchProgress}%</span>
+                        </div>
+                    </div>
+                )}
+
+                {/* Zoom Controls */}
+                <div className="absolute bottom-20 right-4 flex flex-col gap-2 z-10">
+                    <button
+                        onClick={() => setTransform(prev => ({
+                            ...prev,
+                            scale: Math.max(MIN_ZOOM, prev.scale - ZOOM_STEP)
+                        }))}
+                        className="p-2.5 shadow rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700
                      text-gray-700 dark:text-gray-200 transition-colors"
-            title="Zoom Out"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
-            </svg>
-          </button>
-          <button
-            onClick={() => setTransform(prev => ({ ...prev, scale: Math.min(MAX_ZOOM, prev.scale + ZOOM_STEP) }))}
-            className="p-2.5 shadow rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 
+                        title="Zoom Out"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             className="w-5 h-5">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"/>
+                        </svg>
+                    </button>
+                    <button
+                        onClick={() => setTransform(prev => ({
+                            ...prev,
+                            scale: Math.min(MAX_ZOOM, prev.scale + ZOOM_STEP)
+                        }))}
+                        className="p-2.5 shadow rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700
                      text-gray-700 dark:text-gray-200 transition-colors"
-            title="Zoom In"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
-            </svg>
-          </button>
-          <button
-            onClick={() => setTransform({ x: 0, y: 0, scale: 1 })}
-            className="p-2.5 shadow rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 
+                        title="Zoom In"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             className="w-5 h-5">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/>
+                        </svg>
+                    </button>
+                    <button
+                        onClick={() => setTransform({x: 0, y: 0, scale: 1})}
+                        className="p-2.5 shadow rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700
                      text-gray-700 dark:text-gray-200 transition-colors"
-            title="Reset View"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-            </svg>
-          </button>
-        </div>
+                        title="Reset View"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             className="w-5 h-5">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                  d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
+                        </svg>
+                    </button>
+                </div>
 
         <svg
           ref={svgRef}
@@ -706,14 +768,15 @@ const PreReqChart = () => {
         </svg>
       </main>
 
-      {/* Footer */}
-      <footer className="fixed bottom-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 shadow-md z-20 transition-colors duration-200">
-        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
-          <div className="flex items-center gap-4">
+            {/* Footer */}
+            <footer
+                className="fixed bottom-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 shadow-md z-20 transition-colors duration-200">
+                <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
+                    <div className="flex items-center gap-4">
             <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               Made by{' '}
-              <a href="https://www.linkedin.com/in/vineethsendilraj/" target="_blank" rel="noopener noreferrer"
-                 className={`underline ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}>
+                <a href="https://www.linkedin.com/in/vineethsendilraj/" target="_blank" rel="noopener noreferrer"
+                   className={`underline ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}>
                 Vineeth Sendilraj
               </a>
               ,{' '}
@@ -728,21 +791,23 @@ const PreReqChart = () => {
               </a>
               , under the direction of Mary Hudachek-Buswell
             </span>
-          </div>
-          <a
-            href="https://github.com/VineethSendilraj/GradGT"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`flex items-center gap-2 ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}
-            title="View source on GitHub"
-          >
-            <svg height="24" viewBox="0 0 16 16" version="1.1" width="24" aria-hidden="true">
-              <path fillRule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" fill="currentColor"></path>
-            </svg>
-            <span className="text-sm">Source</span>
-          </a>
-        </div>
-      </footer>
+                    </div>
+                    <a
+                        href="https://github.com/VineethSendilraj/GradGT"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`flex items-center gap-2 ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}
+                        title="View source on GitHub"
+                    >
+                        <svg height="24" viewBox="0 0 16 16" version="1.1" width="24" aria-hidden="true">
+                            <path fillRule="evenodd"
+                                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+                                  fill="currentColor"></path>
+                        </svg>
+                        <span className="text-sm">Source</span>
+                    </a>
+                </div>
+            </footer>
 
       {/* Popup with dark mode support */}
       {selectedCourse && (
@@ -770,11 +835,12 @@ const PreReqChart = () => {
                       {(() => {
                         const prereqGroups = getPrerequisites(selectedCourse.id);
 
-                        if (prereqGroups.direct.length === 0 &&
-                            Object.keys(prereqGroups.andGroups).length === 0 &&
-                            Object.keys(prereqGroups.orGroups).length === 0) {
-                          return <p className="text-gray-500 dark:text-gray-400">No prerequisites</p>;
-                        }
+                                                if (prereqGroups.direct.length === 0 &&
+                                                    Object.keys(prereqGroups.andGroups).length === 0 &&
+                                                    Object.keys(prereqGroups.orGroups).length === 0) {
+                                                    return <p className="text-gray-500 dark:text-gray-400">No
+                                                        prerequisites</p>;
+                                                }
 
                         return (
                           <div className="space-y-3">
@@ -789,14 +855,15 @@ const PreReqChart = () => {
                               </div>
                             )}
 
-                            {Object.entries(prereqGroups.andGroups).map(([nodeId, courses]) => (
-                              <div key={nodeId}>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Must complete all:</p>
-                                <p className="pl-5 mt-1">
-                                  {courses.join(' AND ')}
-                                </p>
-                              </div>
-                            ))}
+                                                        {Object.entries(prereqGroups.andGroups).map(([nodeId, courses]) => (
+                                                            <div key={nodeId}>
+                                                                <p className="text-sm text-gray-500 dark:text-gray-400">Must
+                                                                    complete all:</p>
+                                                                <p className="pl-5 mt-1">
+                                                                    {courses.join(' AND ')}
+                                                                </p>
+                                                            </div>
+                                                        ))}
 
                             {Object.entries(prereqGroups.orGroups).map(([nodeId, courses]) => (
                               <div key={nodeId}>

@@ -1,16 +1,12 @@
 import React from 'react';
-
-type FilterKeys = 'showIntelligence' | 'showInformation';
+import Thread from './PreReqChart'
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
   darkMode: boolean;
-  filters: {
-    showIntelligence: boolean;
-    showInformation: boolean;
-  };
-  onFilterChange: (key: FilterKeys) => void;
+  filters: Thread[];
+  onFilterChange: (key: Thread) => void;
 }
 
 const Sidebar = ({ isOpen, onClose, darkMode, filters, onFilterChange }: SidebarProps) => {
@@ -54,28 +50,20 @@ const Sidebar = ({ isOpen, onClose, darkMode, filters, onFilterChange }: Sidebar
                 Thread Visibility
               </h3>
               <div className="space-y-3">
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={filters.showIntelligence}
-                    onChange={() => onFilterChange('showIntelligence')}
-                    className="w-4 h-4 rounded border-gray-300 text-emerald-500 focus:ring-emerald-500"
-                  />
-                  <span className={`${darkMode ? 'text-gray-200' : 'text-gray-600'}`}>
-                    Intelligence Thread
+                {filters.map((filter) => (
+                    filter.name !== "required" &&
+                    <label className="flex items-center space-x-3 cursor-pointer" key={filter.name}>
+                      <input
+                          type="checkbox"
+                          checked={filter.show}
+                          onChange={() => onFilterChange(filter.name)}
+                          className="w-4 h-4 rounded border-gray-300 text-emerald-500 focus:ring-emerald-500"
+                      />
+                      <span className={`${darkMode ? 'text-gray-200' : 'text-gray-600'}`}>
+                    {filter.formalName}
                   </span>
-                </label>
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={filters.showInformation}
-                    onChange={() => onFilterChange('showInformation')}
-                    className="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500"
-                  />
-                  <span className={`${darkMode ? 'text-gray-200' : 'text-gray-600'}`}>
-                    Information Thread
-                  </span>
-                </label>
+                    </label>
+                ))}
               </div>
             </div>
           </div>
