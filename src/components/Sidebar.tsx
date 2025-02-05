@@ -1,13 +1,34 @@
 import React from 'react';
-import Thread from './PreReqChart'
+
+interface Thread {
+  name: string;
+  formalName: string;
+  show: boolean;
+}
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
   darkMode: boolean;
   filters: Thread[];
-  onFilterChange: (key: Thread) => void;
+  onFilterChange: (key: string) => void;
 }
+
+// Color mapping for the thread text in the sidebar
+const getThreadTextColor = (threadName: string, darkMode: boolean): string => {
+  const colorMap: Record<string, { light: string, dark: string }> = {
+    'intel': { light: 'text-emerald-700', dark: 'text-emerald-400' },
+    'info': { light: 'text-orange-700', dark: 'text-orange-400' },
+    'people': { light: 'text-blue-700', dark: 'text-blue-400' },
+    'media': { light: 'text-pink-700', dark: 'text-pink-400' },
+    'theory': { light: 'text-purple-700', dark: 'text-purple-400' },
+    'mod-sim': { light: 'text-teal-700', dark: 'text-teal-400' },
+    'sys-arch': { light: 'text-green-700', dark: 'text-green-400' },
+    'devices': { light: 'text-red-700', dark: 'text-red-400' }
+  };
+
+  return colorMap[threadName]?.[darkMode ? 'dark' : 'light'] || (darkMode ? 'text-gray-200' : 'text-gray-600');
+};
 
 const Sidebar = ({ isOpen, onClose, darkMode, filters, onFilterChange }: SidebarProps) => {
   return (
@@ -51,18 +72,21 @@ const Sidebar = ({ isOpen, onClose, darkMode, filters, onFilterChange }: Sidebar
               </h3>
               <div className="space-y-3">
                 {filters.map((filter) => (
-                    filter.name !== "required" &&
+                  filter.name !== "required" && (
                     <label className="flex items-center space-x-3 cursor-pointer" key={filter.name}>
                       <input
-                          type="checkbox"
-                          checked={filter.show}
-                          onChange={() => onFilterChange(filter.name)}
-                          className="w-4 h-4 rounded border-gray-300 text-emerald-500 focus:ring-emerald-500"
+                        type="checkbox"
+                        checked={filter.show}
+                        onChange={() => onFilterChange(filter.name)}
+                        className={`w-4 h-4 rounded border-gray-300 focus:ring-offset-0 focus:ring-2 ${
+                          getThreadTextColor(filter.name, false).replace('text-', 'text-opacity-75 focus:ring-')
+                        }`}
                       />
-                      <span className={`${darkMode ? 'text-gray-200' : 'text-gray-600'}`}>
-                    {filter.formalName}
-                  </span>
+                      <span className={`font-medium transition-colors duration-200 ${getThreadTextColor(filter.name, darkMode)}`}>
+                        {filter.formalName}
+                      </span>
                     </label>
+                  )
                 ))}
               </div>
             </div>
