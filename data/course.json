@@ -3,287 +3,714 @@
     {
       "id": "MATH 1551",
       "name": "Differential Calculus",
+      "short_name": "Calc 1",
       "x": 0,
       "y": 0,
-      "type": "required"
+      "threads": ["required"]
     },
     {
       "id": "MATH 1552",
       "name": "Integral Calculus",
+      "short_name": "Calc 2",
       "x": 1,
       "y": 0,
-      "type": "required"
+      "threads": ["required"]
     },
     {
       "id": "MATH 1554",
       "name": "Linear Algebra",
+      "short_name": "Linear",
       "x": 1,
       "y": 2,
-      "type": "required"
+      "threads": ["required"]
     },
     {
       "id": "MATH 2550",
       "name": "Intro to Multivariable Calculus",
+      "short_name": "Multi",
       "x": 3,
       "y": 1,
-      "type": "required"
+      "threads": ["required"]
     },
     {
       "id": "MATH 2552",
       "name": "DIfferential Equations",
+      "short_name": "Diff Eq",
       "x": 3,
       "y": 0,
-      "type": "required"
+      "threads": ["mod-sim"]
     },
     {
       "id": "MATH 3012",
       "name": "Applied Combinatorics",
+      "short_name": "Combo",
       "x": 3,
       "y": 4,
-      "type": "required"
+      "threads": ["required"]
     },
     {
       "id": "PROB/STAT",
       "name": "Probability & Statistics",
+      "short_name": "Stat",
       "x": 7,
       "y": 1,
-      "type": "required"
+      "threads": ["required"]
     },
     {
       "id": "CS 1301",
       "name": "Introduction to Computing",
+      "short_name": "Intro CS",
       "x": 0,
       "y": 8,
-      "type": "required"
+      "threads": ["required"]
     },
     {
       "id": "CS 1331",
       "name": "Introduction to Object Oriented Programming",
+      "short_name": "Intro OOP",
       "x": 1,
       "y": 8,
-      "type": "required"
+      "threads": ["required"]
     },
     {
       "id": "CS 1332",
       "name": "Data Structures & Algorithms",
+      "short_name": "DSA",
       "x": 2,
       "y": 8,
-      "type": "required"
+      "threads": ["required"]
     },
     {
       "id": "CS 2050",
       "name": "Introduction to Discrete Math for CS",
+      "short_name": "Discrete",
       "x": 4,
       "y": 5,
-      "type": "required"
+      "threads": ["required"]
     },
     {
       "id": "CS 3510",
       "name": "Design and Analysis of Algorithms",
+      "short_name": "Algos",
       "x": 5,
       "y": 6,
-      "type": "required"
+      "threads": ["required"]
     },
     {
       "id": "CS 2340",
       "name": "Objects & Design",
+      "short_name": "Intro SWE",
       "x": 2,
-      "y": 9,
-      "type": "required"
-    },
-    {
-      "id": "CS 2110",
-      "name": "Computer Organization & Programming",
-      "x": 2,
-      "y": 11,
-      "type": "required"
-    },
-    {
-      "id": "CS 2200",
-      "name": "Computer Systems & Networks",
-      "x": 3,
-      "y": 13,
-      "type": "required"
+      "y": 10,
+      "threads": ["required"]
     },
     {
       "id": "&1",
       "name": "AND",
+      "short_name": "",
       "x": 2,
-      "y": 1
+      "y": 1,
+      "threads": [""]
     },
     {
       "id": "|1",
       "name": "OR",
-      "x": 4,
-      "y": 6
-    },
-    {
-      "id": "CS 3251",
-      "name": "Computer Networking I",
-      "x": 6,
-      "y": 10,
-      "type": "information"
-    },
-    {
-      "id": "CS 3235",
-      "name": "Introduction to Information Security",
-      "x": 6,
-      "y": 11,
-      "type": "information"
-    },
-    {
-      "id": "CS 4400",
-      "name": "Introduction to Database Systems",
-      "x": 6,
-      "y": 12,
-      "type": "information"
-    },
-    {
-      "id": "CS 4251",
-      "name": "Computer Networking II",
-      "x": 7,
-      "y": 10,
-      "type": "information"
-    },
-    {
-      "id": "CS 4255",
-      "name": "Network Management",
-      "x": 7,
-      "y": 11,
-      "type": "information"
-    },
-    {
-      "id": "CS 4261",
-      "name": "Mobile Applications and Services",
-      "x": 7,
-      "y": 12,
-      "type": "information"
-    },
-    {
-      "id": "CS 4262",
-      "name": "Network Security",
-      "x": 7,
-      "y": 13,
-      "type": "information"
-    },
-    {
-      "id": "CS 4270",
-      "name": "Data Communications Laboratory",
-      "x": 7,
-      "y": 14,
-      "type": "information"
-    },
-    {
-      "id": "CS 4365",
-      "name": "Enterprise Computing",
-      "x": 7,
-      "y": 15,
-      "type": "information"
-    },
-    {
-      "id": "CS 4420",
-      "name": "Database System Implementation",
-      "x": 7,
-      "y": 16,
-      "type": "information"
-    },
-    {
-      "id": "CS 4440",
-      "name": "Emerging Database Technologies",
-      "x": 7,
-      "y": 17,
-      "type": "information"
-    },
-    {
-      "id": "CS 4675",
-      "name": "Internet Computing Systems",
-      "x": 7,
-      "y": 18,
-      "type": "information"
-    },
-    {
-      "id": "CS 3600",
-      "name": "Introduction to Artificial Intelligence",
-      "x": 6,
-      "y": 5,
-      "type": "intelligence"
-    },
-    {
-      "id": "CS 3630",
-      "name": "Introduction to Perception and Robotics",
-      "x": 7,
+      "short_name": "",
+      "x": 3,
       "y": 6,
-      "type": "intelligence"
+      "threads": [""]
     },
     {
-      "id": "CS 3790",
-      "name": "Introduction to Cognitive Science",
-      "x": 7,
-      "y": 7,
-      "type": "intelligence"
+      "id": "CX 4640",
+      "name": "Numerical Analysis I",
+      "short_name": "",
+      "x": 10,
+      "y": 0,
+      "threads": ["mod-sim"]
     },
     {
-      "id": "CS 4476",
-      "name": "Introduction to Computer Vision",
-      "x": 8,
-      "y": 5,
-      "type": "intelligence"
+      "id": "CX 4230",
+      "name": "Computer Simulation",
+      "short_name": "Comp Sim",
+      "x": 10,
+      "y": 1,
+      "threads": ["mod-sim"]
     },
     {
-      "id": "CS 4510",
-      "name": "Automata and Complexity Theory",
-      "x": 8,
-      "y": 6,
-      "type": "intelligence"
+      "id": "CX 4220",
+      "name": "Introduction to High Performance Computing",
+      "short_name": "Intro HPC",
+      "x": 10,
+      "y": 2,
+      "threads": ["mod-sim"]
     },
     {
-      "id": "CS 4635",
-      "name": "Knowledge-Based AI",
-      "x": 8,
-      "y": 7,
-      "type": "intelligence"
+      "id": "CX 4140",
+      "name": "Computation Modeling Algorithms",
+      "short_name": "Modeling Algos",
+      "x": 10,
+      "y": 3,
+      "threads": ["mod-sim"]
     },
     {
       "id": "CS 4641",
       "name": "Machine Learning",
-      "x": 8,
-      "y": 8,
-      "type": "intelligence"
+      "short_name": "ML",
+      "x": 10,
+      "y": 4,
+      "threads": ["mod-sim", "intel"]
     },
     {
-      "id": "CS 4644",
-      "name": "Deep Learning",
-      "x": 8,
-      "y": 9,
-      "type": "intelligence"
+      "id": "MATH 3406",
+      "name": "A Second Course on Linear Algebra",
+      "short_name": "Linear 2",
+      "x": 2,
+      "y": 4,
+      "threads": ["theory"]
     },
     {
-      "id": "CS 4646",
-      "name": "Machine Learning for Trading",
-      "x": 8,
-      "y": 10,
-      "type": "intelligence"
+      "id": "MATH 4022",
+      "name": "Introduction to Graph Theory",
+      "short_name": "Graph Theory",
+      "x": 7,
+      "y": 4,
+      "threads": ["theory"]
     },
     {
-      "id": "CS 4649",
-      "name": "Robot Intelligence Planning",
-      "x": 8,
-      "y": 11,
-      "type": "intelligence"
+      "id": "CS 4540",
+      "name": "",
+      "short_name": "Advanced Algos",
+      "x": 9,
+      "y": 4,
+      "threads": ["theory"]
+    },
+    {
+      "id": "MATH 4150",
+      "name": "Introduction to Number Theory",
+      "short_name": "Number Theory",
+      "x": 6,
+      "y": 5,
+      "threads": ["theory"]
+    },
+    {
+      "id": "MATH 4032",
+      "name": "Combinatorial Analysis",
+      "short_name": "Combo 2",
+      "x": 7,
+      "y": 5,
+      "threads": ["theory"]
+    },
+    {
+      "id": "CS 4510",
+      "name": "",
+      "short_name": "Automata",
+      "x": 10,
+      "y": 6,
+      "threads": ["theory", "intel"]
     },
     {
       "id": "CS 4650",
-      "name": "Natural Language Understanding",
-      "x": 8,
-      "y": 12,
-      "type": "intelligence"
+      "name": "Natural Language Processing",
+      "short_name": "NLP",
+      "x": 10,
+      "y": 7,
+      "threads": ["intel"]
+    },
+    {
+      "id": "CS 4635",
+      "name": "Knowledge-Based AI",
+      "short_name": "KBAI",
+      "x": 10,
+      "y": 9,
+      "threads": ["intel"]
     },
     {
       "id": "CS 4731",
       "name": "Game AI",
+      "short_name": "",
+      "x": 10,
+      "y": 10,
+      "threads": ["intel"]
+    },
+    {
+      "id": "CS 4644",
+      "name": "Deep Learning",
+      "short_name": "DL",
+      "x": 10,
+      "y": 11,
+      "threads": ["intel"]
+    },
+    {
+      "id": "CS 4476",
+      "name": "Computer Vision",
+      "short_name": "CV",
+      "x": 10,
+      "y": 12,
+      "threads": ["intel"]
+    },
+    {
+      "id": "CS 4605",
+      "name": "Mobile & Ubiquitous Computing",
+      "short_name": "Mobile Comp",
+      "x": 10,
+      "y": 13,
+      "threads": ["people", "devices"]
+    },
+    {
+      "id": "CS 3630",
+      "name": "Intro to Perception & Robotics",
+      "short_name": "Robotics",
+      "x": 10,
+      "y": 15,
+      "threads": ["intel", "devices"]
+    },
+    {
+      "id": "CS 3451",
+      "name": "Computer Graphics",
+      "short_name": "",
+      "x": 5,
+      "y": 10,
+      "threads": ["media"]
+    },
+    {
+      "id": "CS 4455",
+      "name": "Video Game Design",
+      "short_name": "Video Games",
+      "x": 6,
+      "y": 10,
+      "threads": ["media"]
+    },
+    {
+      "id": "CS 4488",
+      "name": "Procedural Content Generation",
+      "short_name": "Content Gen",
+      "x": 5,
+      "y": 11,
+      "threads": ["media"]
+    },
+    {
+      "id": "CS 4496",
+      "name": "Computer Animation",
+      "short_name": "Animation",
+      "x": 6,
+      "y": 11,
+      "threads": ["media"]
+    },
+    {
+      "id": "CS 4475",
+      "name": "",
+      "short_name": "",
+      "x": 5,
+      "y": 12,
+      "threads": ["media"]
+    },
+    {
+      "id": "CS 4590",
+      "name": "Computer Audio",
+      "short_name": "",
+      "x": 6,
+      "y": 12,
+      "threads": ["media"]
+    },
+    {
+      "id": "ECE 4180",
+      "name": "Embedded Systems Design",
+      "short_name": "Embedded Systems",
+      "x": 7,
+      "y": 11,
+      "threads": ["devices"]
+    },
+    {
+      "id": "CS 3651",
+      "name": "Prototyping Intellegent Devices",
+      "short_name": "",
+      "x": 7,
+      "y": 12,
+      "threads": ["devices"]
+    },
+    {
+      "id": "CS 4460",
+      "name": "Introduction to Information Visualization",
+      "short_name": "Intro to Info Vis",
+      "x": 6,
+      "y": 13,
+      "threads": ["media", "people"]
+    },
+    {
+      "id": "CS 4660",
+      "name": "Educational Technology",
+      "short_name": "",
+      "x": 7,
+      "y": 13,
+      "threads": ["people"]
+    },
+    {
+      "id": "CS 4745",
+      "name": "Information & Communication Technology & Global Devices",
+      "short_name": "ICT",
       "x": 8,
       "y": 13,
-      "type": "intelligence"
+      "threads": ["people"]
+    },
+    {
+      "id": "CS 4470",
+      "name": "User Interface Software",
+      "short_name": "UI Software",
+      "x": 6,
+      "y": 14,
+      "threads": ["people"]
+    },
+    {
+      "id": "CS 4472",
+      "name": "",
+      "short_name": "",
+      "x": 7,
+      "y": 14,
+      "threads": ["people"]
+    },
+    {
+      "id": "CS 3790",
+      "name": "Introduction to Cognitive Science",
+      "short_name": "Intro Cog Sci",
+      "x": 9,
+      "y": 14,
+      "threads": ["people"]
+    },
+    {
+      "id": "CS 3750",
+      "name": "",
+      "short_name": "",
+      "x": 5,
+      "y": 15,
+      "threads": ["people"]
+    },
+    {
+      "id": "PSYC 2012",
+      "name": "Introduction to Research Method",
+      "short_name": "Intro Research",
+      "x": 8,
+      "y": 15,
+      "threads": ["people"]
+    },
+    {
+      "id": "PSYC 3040",
+      "name": "",
+      "short_name": "",
+      "x": 9,
+      "y": 15,
+      "threads": ["people"]
+    },
+    {
+      "id": "PSYC 1101",
+      "name": "Introduction to General Psychology",
+      "short_name": "Intro Psych",
+      "x": 7,
+      "y": 16,
+      "threads": ["intel", "people"]
+    },
+    {
+      "id": "PSYC 2210",
+      "name": "Social Psychology",
+      "short_name": "Social Psych",
+      "x": 8,
+      "y": 16,
+      "threads": ["people"]
+    },
+    {
+      "id": "PSYC 2760",
+      "name": "Human Language Processing",
+      "short_name": "HLP",
+      "x": 9,
+      "y": 16,
+      "threads": ["people"]
+    },
+    {
+      "id": "CS 2261",
+      "name": "Media Device Architecture",
+      "short_name": "Media Arch",
+      "x": 2,
+      "y": 15,
+      "threads": ["people", "media"]
+    },
+    {
+      "id": "CS 2110",
+      "name": "Computer Organization & Programming",
+      "short_name": "Intro Comp Arch",
+      "x": 2,
+      "y": 16,
+      "threads": ["mod-sim", "theory", "intel", "devices", "sys-arch", "cyber", "info"]
+    },
+    {
+      "id": "ECE 2031",
+      "name": "Digital Design Lab",
+      "short_name": "",
+      "x": 5,
+      "y": 17,
+      "threads": ["devices", "sys-arch"]
+    },
+    {
+      "id": "CS 3220",
+      "name": "Software-Hardware Co-design of a Processor",
+      "short_name": "Proc Design",
+      "x": 7,
+      "y": 17,
+      "threads": ["sys-arch"]
+    },
+    {
+      "id": "CS 2200",
+      "name": "Computer Systems & Networks",
+      "short_name": "Comp Systems",
+      "x": 4,
+      "y": 21,
+      "threads": ["mod-sim", "devices", "sys-arch", "cyber", "info"]
+    },
+    {
+      "id": "CS 3210",
+      "name": "Design of Operating Systems",
+      "short_name": "OS",
+      "x": 6,
+      "y": 20,
+      "threads": ["sys-arch"]
+    },
+    {
+      "id": "CS 4220",
+      "name": "Embedded Systems",
+      "short_name": "",
+      "x": 6,
+      "y": 21,
+      "threads": ["sys-arch"]
+    },
+    {
+      "id": "CS 4290",
+      "name": "Advanced Computer Organization",
+      "short_name": "HPCA",
+      "x": 6,
+      "y": 22,
+      "threads": ["sys-arch"]
+    },
+    {
+      "id": "CS 4210",
+      "name": "Advanced Operating Systems",
+      "short_name": "AOS",
+      "x": 7,
+      "y": 21,
+      "threads": ["sys-arch"]
+    },
+    {
+      "id": "CS 4400",
+      "name": "Introduction to Database Systems",
+      "short_name": "Intro DB",
+      "x": 8,
+      "y": 18,
+      "threads": ["info"]
+    },
+    {
+      "id": "CS 3251",
+      "name": "Computer Networking I",
+      "short_name": "Networking I",
+      "x": 8,
+      "y": 22,
+      "threads": ["info"]
+    },
+    {
+      "id": "CS 3235",
+      "name": "Introduction to Information Security",
+      "short_name": "Info Sec",
+      "x": 8,
+      "y": 24,
+      "threads": ["info"]
+    },
+    {
+      "id": "CS 4675",
+      "name": "Internet Systems & Services",
+      "short_name": "",
+      "x": 9,
+      "y": 21,
+      "threads": ["info"]
+    },
+    {
+      "id": "CS 4261",
+      "name": "Mobile Applications & Services",
+      "short_name": "Mobile Apps",
+      "x": 10,
+      "y": 17,
+      "threads": ["info"]
+    },
+    {
+      "id": "CS 4420",
+      "name": "Database Systems and Implementation",
+      "short_name": "DB Impl",
+      "x": 10,
+      "y": 18,
+      "threads": ["info"]
+    },
+    {
+      "id": "CS 4440",
+      "name": "Database Technologies",
+      "short_name": "DB Tech",
+      "x": 10,
+      "y": 19,
+      "threads": ["info"]
+    },
+    {
+      "id": "CS 4365",
+      "name": "Introduction to Enterprise Computing",
+      "short_name": "Intro Enterprise Comp",
+      "x": 10,
+      "y": 20,
+      "threads": ["info"]
+    },
+    {
+      "id": "CS 4251",
+      "name": "Computer Networking II",
+      "short_name": "Networking II",
+      "x": 10,
+      "y": 21,
+      "threads": ["info"]
+    },
+    {
+      "id": "CS 4255",
+      "name": "",
+      "short_name": "",
+      "x": 10,
+      "y": 22,
+      "threads": ["info"]
+    },
+    {
+      "id": "CS 4262",
+      "name": "Network Security",
+      "short_name": "",
+      "x": 10,
+      "y": 23,
+      "threads": ["info"]
+    },
+    {
+      "id": "CS 3237",
+      "name": "Human Dimension of Cybersecurity",
+      "short_name": "",
+      "x": 6,
+      "y": 25,
+      "threads": ["cyber"]
+    },
+    {
+      "id": "CS 4243",
+      "name": "",
+      "short_name": "",
+      "x": 10,
+      "y": 25,
+      "threads": ["cyber"]
+    },
+    {
+      "id": "CS 4117",
+      "name": "Introduction to Malware Reverse Engineering",
+      "short_name": "Malware Rev Eng",
+      "x": 8,
+      "y": 26,
+      "threads": ["cyber"]
+    },
+    {
+      "id": "CS 4725",
+      "name": "Information Security Policies",
+      "short_name": "Info Sec Policies",
+      "x": 8,
+      "y": 27,
+      "threads": ["cyber"]
+    },
+    {
+      "id": "CS 4239",
+      "name": "Enterprise Cybersecurity Management",
+      "short_name": "Ent. Cyber Mgmt",
+      "x": 10,
+      "y": 27,
+      "threads": ["cyber"]
+    },
+    {
+      "id": "CS 4238",
+      "name": "Computer Systems Security",
+      "short_name": "Systems Security",
+      "x": 8,
+      "y": 28,
+      "threads": ["cyber"]
+    },
+    {
+      "id": "CS 4263",
+      "name": "Psychology of Cybersecurity",
+      "short_name": "Cyber Psychol",
+      "x": 10,
+      "y": 28,
+      "threads": ["cyber"]
+    },
+    {
+      "id": "CS 3001",
+      "name": "Computing, Society, & Professionalism",
+      "short_name": "Ethics",
+      "x": 7,
+      "y": 29,
+      "threads": ["required"]
+    },
+    {
+      "id": "CS 4726",
+      "name": "Privacy, Technology, Policy & Law",
+      "short_name": "Ethics",
+      "x": 8,
+      "y": 29,
+      "threads": ["required"]
+    },
+    {
+      "id": "&2",
+      "name": "AND",
+      "short_name": "",
+      "x": 8,
+      "y": 6,
+      "threads": [""]
+    },
+    {
+      "id": "&3",
+      "name": "AND",
+      "short_name": "",
+      "x": 7,
+      "y": 7,
+      "threads": [""]
+    },
+    {
+      "id": "&4",
+      "name": "AND",
+      "short_name": "",
+      "x": 8,
+      "y": 12,
+      "threads": [""]
+    },
+    {
+      "id": "&5",
+      "name": "AND",
+      "short_name": "",
+      "x": 3,
+      "y": 10,
+      "threads": [""]
+    },
+    {
+      "id": "&6",
+      "name": "AND",
+      "short_name": "",
+      "x": 4,
+      "y": 10,
+      "threads": [""]
+    },
+    {
+      "id": "|2",
+      "name": "",
+      "short_name": "",
+      "x": 4,
+      "y": 15,
+      "threads": [""]
+    },
+    {
+      "id": "|3",
+      "name": "",
+      "short_name": "",
+      "x": 9,
+      "y": 20,
+      "threads": [""]
     }
   ],
   "prereqs": [
@@ -310,10 +737,6 @@
     {
       "from": "&1",
       "to": "MATH 2550"
-    },
-    {
-      "from": "MATH 2550",
-      "to": "PROB/STAT"
     },
     {
       "from": "&1",
@@ -349,19 +772,239 @@
     },
     {
       "from": "CS 1331",
-      "to": "CS 2110",
-      "fromSide": "bottom",
-      "toSide": "top"
+      "to": "CS 2261"
+    },
+    {
+      "from": "CS 1331",
+      "to": "CS 2110"
     },
     {
       "from": "CS 2110",
-      "to": "CS 2200",
-      "fromSide": "bottom",
-      "toSide": "top"
+      "to": "CS 2200"
+    },
+    {
+      "from": "MATH 2552",
+      "to": "CX 4640"
+    },
+    {
+      "from": "MATH 2550",
+      "to": "PROB/STAT"
+    },
+    {
+      "from": "PROB/STAT",
+      "to": "CX 4230"
+    },
+    {
+      "from": "MATH 3012",
+      "to": "MATH 4022"
+    },
+    {
+      "from": "MATH 3012",
+      "to": "MATH 40232"
+    },
+    {
+      "from": "CS 3510",
+      "to": "MATH 4150"
+    },
+    {
+      "from": "CS 3510",
+      "to": "&2"
+    },
+    {
+      "from": "&2",
+      "to": "CS 4540"
+    },
+    {
+      "from": "&2",
+      "to": "CS 4510"
+    },
+    {
+      "from": "",
+      "to": ""
+    },
+    {
+      "from": "CS 3510",
+      "to": "&3"
+    },
+    {
+      "from": "&3",
+      "to": "CS 4650"
+    },
+    {
+      "from": "CS 1332",
+      "to": "CS 4649"
+    },
+    {
+      "from": "CS 1332",
+      "to": "CS 3600"
+    },
+    {
+      "from": "CS 3600",
+      "to": "CS 4635"
+    },
+    {
+      "from": "CS 3600",
+      "to": "CS 4646"
+    },
+    {
+      "from": "CS 3600",
+      "to": "CS 4731"
+    },
+    {
+      "from": "&3",
+      "to": "&4"
+    },
+    {
+      "from": "&4",
+      "to": "CS 4644"
+    },
+    {
+      "from": "&4",
+      "to": "CS 4476"
+    },
+    {
+      "from": "",
+      "to": ""
+    },
+    {
+      "from": "CS 2340",
+      "to": "CS 3300"
+    },
+    {
+      "from": "CS 2340",
+      "to": "CS 4240"
+    },
+    {
+      "from": "CS 2110",
+      "to": "ECE 2031"
+    },
+    {
+      "from": "ECE 2031",
+      "to": "CS 3220"
+    },
+    {
+      "from": "",
+      "to": ""
+    },
+    {
+      "from": "CS 3510",
+      "to": "ECE 4180"
+    },
+    {
+      "from": "CS 1332",
+      "to": "&5"
+    },
+    {
+      "from": "CS 2340",
+      "to": "&5"
+    },
+    {
+      "from": "&5",
+      "to": "&6"
+    },
+    {
+      "from": "",
+      "to": ""
+    },
+    {
+      "from": "&6",
+      "to": "CS 3451"
+    },
+    {
+      "from": "CS 2261",
+      "to": "|2"
+    },
+    {
+      "from": "CS 2110",
+      "to": "|2"
+    },
+    {
+      "from": "|2",
+      "to": "CS 3451"
+    },
+    {
+      "from": "&5",
+      "to": "CS 4488"
+    },
+    {
+      "from": "",
+      "to": ""
+    },
+    {
+      "from": "CS 3451",
+      "to": "CS 4455"
+    },
+    {
+      "from": "CS 3451",
+      "to": "CS 4496"
+    },
+    {
+      "from": "CS 3750",
+      "to": "CS 4470"
+    },
+    {
+      "from": "PSYC 1101",
+      "to": "PSYC 2012"
+    },
+    {
+      "from": "",
+      "to": ""
+    },
+    {
+      "from": "PSYC 1101",
+      "to": "PSYC 2210"
     },
     {
       "from": "CS 2200",
-      "to": "CS 3251"
+      "to": "CS 3210"
+    },
+    {
+      "from": "CS 2200",
+      "to": "CS 4220"
+    },
+    {
+      "from": "CS 2200",
+      "to": "CS 4290"
+    },
+    {
+      "from": "CS 3210",
+      "to": "CS 4210"
+    },
+    {
+      "from": "CS 2200",
+      "to": "CS 3220"
+    },
+    {
+      "from": "",
+      "to": ""
+    },
+    {
+      "from": "",
+      "to": ""
+    },
+    {
+      "from": "",
+      "to": ""
+    },
+    {
+      "from": "CS 4400",
+      "to": "CS 4420"
+    },
+    {
+      "from": "CS 4400",
+      "to": "CS 4440"
+    },
+    {
+      "from": "CS 3210",
+      "to": "|3"
+    },
+    {
+      "from": "CS 4400",
+      "to": "|3"
+    },
+    {
+      "from": "|3",
+      "to": "CS 4365"
     },
     {
       "from": "CS 3251",
@@ -373,35 +1016,49 @@
     },
     {
       "from": "CS 3251",
-      "to": "CS 4261"
+      "to": "CS 4262"
     },
     {
-      "from": "CS 1332",
-      "to": "CS 4400"
-    },
-    {
-      "from": "CS 4400",
-      "to": "CS 4420"
-    },
-    {
-      "from": "CS 1332",
-      "to": "CS 3600"
-    },
-    {
-      "from": "CS 3600",
-      "to": "CS 4641"
-    },
-    {
-      "from": "CS 3600",
-      "to": "CS 4635"
-    },
-    {
-      "from": "CS 3600",
-      "to": "CS 4649"
-    },
-    {
-      "from": "CS 3600",
-      "to": "CS 4650"
+      "from": "CS 3235",
+      "to": "CS 4243"
     }
-  ]
+  ],
+  "threads": {
+    "required": {
+      "light": {
+        "bg": "#fbbf24",
+        "text": "#78350f",
+        "textSecondary": "#92400e"
+      },
+      "dark": {
+        "bg": "#78350f",
+        "text": "#fbbf24",
+        "textSecondary": "#fcd34d"
+      }
+    },
+    "intel": {
+      "light": {
+        "bg": "#34d399",
+        "text": "#064e3b",
+        "textSecondary": "#065f46"
+      },
+      "dark": {
+        "bg": "#064e3b",
+        "text": "#34d399",
+        "textSecondary": "#6ee7b7"
+      }
+    },
+    "info": {
+      "light": {
+        "bg": "#fb923c",
+        "text": "#7c2d12",
+        "textSecondary": "#9a3412"
+      },
+      "dark": {
+        "bg": "#7c2d12",
+        "text": "#fb923c",
+        "textSecondary": "#fdba74"
+      }
+    }
+  }
 }

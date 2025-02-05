@@ -7,7 +7,7 @@ import { fetchCourseData } from '@/lib/api';
 import type { CourseEnrollmentData } from '@/lib/api';
 import { prefetchAllCourseData, type PrefetchedData } from '@/lib/prefetch';
 
-type CourseType = 'required' | 'intelligence' | 'information' | undefined;
+type CourseType = 'required' | 'intel' | 'info' | 'people' | 'media' | 'theory' | 'mod-sim' | 'sys-arch' | 'devices';
 
 interface Point {
   x: number;
@@ -19,9 +19,10 @@ interface Point {
 interface Course {
   id: string;
   name: string;
+  short_name: string;
   x: number;
   y: number;
-  type?: CourseType;
+  threads: CourseType[];
 }
 
 interface Prereq {
@@ -36,47 +37,9 @@ interface CourseData {
   prereqs: Prereq[];
 }
 
-const { courses, prereqs } = data as CourseData;
+const { courses, prereqs, threads } = data as CourseData;
 
-// Color constants for course types
-const COLORS = {
-  required: {
-    light: {
-      bg: '#fbbf24',      // Amber-400
-      text: '#78350f',    // Amber-900
-      textSecondary: '#92400e'  // Amber-800
-    },
-    dark: {
-      bg: '#78350f',      // Amber-900
-      text: '#fbbf24',    // Amber-400
-      textSecondary: '#fcd34d'  // Amber-300
-    }
-  },
-  intelligence: {
-    light: {
-      bg: '#34d399',      // Emerald-400
-      text: '#064e3b',    // Emerald-900
-      textSecondary: '#065f46'  // Emerald-800
-    },
-    dark: {
-      bg: '#064e3b',      // Emerald-900
-      text: '#34d399',    // Emerald-400
-      textSecondary: '#6ee7b7'  // Emerald-300
-    }
-  },
-  information: {
-    light: {
-      bg: '#fb923c',      // Orange-400
-      text: '#7c2d12',    // Orange-900
-      textSecondary: '#9a3412'  // Orange-800
-    },
-    dark: {
-      bg: '#7c2d12',      // Orange-900
-      text: '#fb923c',    // Orange-400
-      textSecondary: '#fdba74'  // Orange-300
-    }
-  }
-} as const;
+const COLORS = threads as const;
 
 // Add a type for the default connection sides
 const DEFAULT_CONNECTION = {
@@ -550,7 +513,7 @@ const PreReqChart = () => {
                     height={BOX_HEIGHT}
                     rx={CORNER_RADIUS}
                     ry={CORNER_RADIUS}
-                    fill={course.type ? (darkMode ? COLORS[course.type].dark.bg : COLORS[course.type].light.bg) : (darkMode ? "#1f2937" : "white")}
+                    fill={course.threads && COLORS[course.threads[0]] ? (darkMode ? COLORS[course.threads[0]].dark.bg : COLORS[course.threads[0]].light.bg) : (darkMode ? "#1f2937" : "white")}
                     stroke={darkMode ? "#4b5563" : "#e5e7eb"}
                     strokeWidth="2"
                     className="cursor-pointer transition-colors duration-200"
@@ -569,7 +532,7 @@ const PreReqChart = () => {
                     x={course.x * HORIZONTAL_SPACING}
                     y={course.y * VERTICAL_SPACING - BOX_HEIGHT / 2 + ID_SECTION_HEIGHT/2 + 6}
                     textAnchor="middle"
-                    fill={course.type ? (darkMode ? COLORS[course.type].dark.text : COLORS[course.type].light.text) : (darkMode ? "#f3f4f6" : "#111827")}
+                    fill={course.threads && COLORS[course.threads[0]] ? (darkMode ? COLORS[course.threads[0]].dark.text : COLORS[course.threads[0]].light.text) : (darkMode ? "#f3f4f6" : "#111827")}
                     className="text-base font-bold"
                   >
                     {course.id}
@@ -583,8 +546,7 @@ const PreReqChart = () => {
                   >
                     <div className={`text-center text-sm ${
                       course.type 
-                        ? (darkMode ? `text-${course.type === 'required' ? 'amber' : course.type === 'intelligence' ? 'emerald' : 'orange'}-200` 
-                                  : `text-${course.type === 'required' ? 'amber' : course.type === 'intelligence' ? 'emerald' : 'orange'}-900`)
+                        ? course.threads
                         : (darkMode ? 'text-gray-300' : 'text-gray-600')
                     }`}
                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
