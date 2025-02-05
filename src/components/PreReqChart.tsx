@@ -9,7 +9,7 @@ import { prefetchAllCourseData, type PrefetchedData } from '@/lib/prefetch';
 import Sidebar from './Sidebar';
 import OnboardingModal from './OnboardingModal';
 
-type CourseType = 'required' | 'intelligence' | 'information' | undefined;
+type CourseType = 'required' | 'intel' | 'info' | 'people' | 'media' | 'theory' | 'mod-sim' | 'sys-arch' | 'devices';
 
 interface Point {
   x: number;
@@ -21,9 +21,10 @@ interface Point {
 interface Course {
   id: string;
   name: string;
+  short_name: string;
   x: number;
   y: number;
-  type?: CourseType;
+  threads: CourseType[];
 }
 
 interface Prereq {
@@ -38,47 +39,9 @@ interface CourseData {
   prereqs: Prereq[];
 }
 
-const { courses, prereqs } = data as CourseData;
+const { courses, prereqs, threads } = data as CourseData;
 
-// Color constants for course types
-const COLORS = {
-  required: {
-    light: {
-      bg: '#fbbf24',      // Amber-400
-      text: '#78350f',    // Amber-900
-      textSecondary: '#92400e'  // Amber-800
-    },
-    dark: {
-      bg: '#78350f',      // Amber-900
-      text: '#fbbf24',    // Amber-400
-      textSecondary: '#fcd34d'  // Amber-300
-    }
-  },
-  intelligence: {
-    light: {
-      bg: '#34d399',      // Emerald-400
-      text: '#064e3b',    // Emerald-900
-      textSecondary: '#065f46'  // Emerald-800
-    },
-    dark: {
-      bg: '#064e3b',      // Emerald-900
-      text: '#34d399',    // Emerald-400
-      textSecondary: '#6ee7b7'  // Emerald-300
-    }
-  },
-  information: {
-    light: {
-      bg: '#fb923c',      // Orange-400
-      text: '#7c2d12',    // Orange-900
-      textSecondary: '#9a3412'  // Orange-800
-    },
-    dark: {
-      bg: '#7c2d12',      // Orange-900
-      text: '#fb923c',    // Orange-400
-      textSecondary: '#fdba74'  // Orange-300
-    }
-  }
-} as const;
+const COLORS = threads as const;
 
 // Add a type for the default connection sides
 const DEFAULT_CONNECTION = {
