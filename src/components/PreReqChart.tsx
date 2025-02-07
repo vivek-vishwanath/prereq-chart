@@ -1046,11 +1046,11 @@ const PreReqChart = () => {
                 Vivek Vishwanath
               </a>
               , and{' '}
-              <a href="https://www.linkedin.com/in/davehday/" target="_blank" rel="noopener noreferrer"
+              <a href="https://www.linkedin.com/in/daveh-day/" target="_blank" rel="noopener noreferrer"
                  className={`underline ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}>
                 Daveh Day
               </a>
-              , under the direction of Mary Hudachek-Buswell
+              , under the direction of Dr. Mary Hudachek-Buswell
             </span>
           </div>
           <a
