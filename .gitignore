@@ -53,3 +53,8 @@ next-env.d.ts
 #virtual env
 .venv
 venv
+
+# custom
+catalog.csv
+catalog.json
+csv_to_json.py
