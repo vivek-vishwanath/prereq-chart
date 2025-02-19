@@ -42,7 +42,7 @@
     },
     {
       "id": "MATH 2552",
-      "name": "DIfferential Equations",
+      "name": "Differential Equations",
       "short_name": "Diff Eq",
       "x": "3",
       "y": "0",
@@ -223,7 +223,7 @@
     },
     {
       "id": "CS 4540",
-      "name": "Advanced ALgorithms",
+      "name": "Advanced Algorithms",
       "short_name": "Advanced Algos",
       "x": "9",
       "y": "5",
@@ -263,7 +263,7 @@
     },
     {
       "id": "CS 4510",
-      "name": "",
+      "name": "Automata & Complexity Theory",
       "short_name": "Automata",
       "x": "10",
       "y": "6",
@@ -337,8 +337,8 @@
       "id": "CS 3630",
       "name": "Intro to Perception & Robotics",
       "short_name": "Robotics",
-      "x": "10",
-      "y": "15",
+      "x": "9",
+      "y": "10",
       "threads": [
         "intel",
         "devices"
@@ -450,7 +450,7 @@
       "name": "Information & Communication Technology & Global Devices",
       "short_name": "ICT",
       "x": "8",
-      "y": "13",
+      "y": "14",
       "threads": [
         "people"
       ]
@@ -460,16 +460,6 @@
       "name": "User Interface Software",
       "short_name": "UI Software",
       "x": "6",
-      "y": "14",
-      "threads": [
-        "people"
-      ]
-    },
-    {
-      "id": "CS 4472",
-      "name": "",
-      "short_name": "",
-      "x": "7",
       "y": "14",
       "threads": [
         "people"
@@ -487,7 +477,7 @@
     },
     {
       "id": "CS 3750",
-      "name": "",
+      "name": "Intro to UI Design",
       "short_name": "",
       "x": "5",
       "y": "15",
@@ -507,7 +497,7 @@
     },
     {
       "id": "PSYC 3040",
-      "name": "",
+      "name": "Sensation & Perception",
       "short_name": "",
       "x": "9",
       "y": "15",
@@ -652,7 +642,7 @@
       "id": "CS 4400",
       "name": "Introduction to Database Systems",
       "short_name": "Intro DB",
-      "x": "8",
+      "x": "7",
       "y": "18",
       "threads": [
         "info"
@@ -682,8 +672,8 @@
       "id": "CS 4675",
       "name": "Internet Systems & Services",
       "short_name": "",
-      "x": "9",
-      "y": "21",
+      "x": "8",
+      "y": "23",
       "threads": [
         "info"
       ]
@@ -739,16 +729,6 @@
       ]
     },
     {
-      "id": "CS 4255",
-      "name": "",
-      "short_name": "",
-      "x": "10",
-      "y": "22",
-      "threads": [
-        "info"
-      ]
-    },
-    {
       "id": "CS 4262",
       "name": "Network Security",
       "short_name": "",
@@ -770,7 +750,7 @@
     },
     {
       "id": "CS 4243",
-      "name": "",
+      "name": "Cyber Warfare",
       "short_name": "",
       "x": "10",
       "y": "25",

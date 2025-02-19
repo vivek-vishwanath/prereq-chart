@@ -756,12 +756,12 @@ const PreReqChart = () => {
     if (left + 500 > window.innerWidth) {
       left = courseX - (BOX_WIDTH / 2 * transform.scale) - 520;
     }
-
-    return {
-      left: `${left}px`,
-      top: `${top}px`,
-      transform: 'none'
-    };
+    return { left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }
+    // return {
+    //   left: `${left}px`,
+    //   top: `${top}px`,
+    //   transform: 'none'
+    // };
   };
 
   // Function to get prerequisites with logical relationships
@@ -1077,57 +1077,57 @@ const PreReqChart = () => {
                 </div>
               ) : enrollmentData ? (
                 <div className="space-y-6">
-                  <div>
-                    <h3 className={`text-lg font-semibold mb-2 ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
-                      Prerequisites
-                    </h3>
-                    <div className="space-y-2">
-                      {(() => {
-                        const prereqGroups = getPrerequisites(selectedCourse.id);
+                  {/*<div>*/}
+                  {/*  <h3 className={`text-lg font-semibold mb-2 ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>*/}
+                  {/*    Prerequisites*/}
+                  {/*  </h3>*/}
+                  {/*  <div className="space-y-2">*/}
+                  {/*    {(() => {*/}
+                  {/*      const prereqGroups = getPrerequisites(selectedCourse.id);*/}
 
-                        if (prereqGroups.direct.length === 0 &&
-                            Object.keys(prereqGroups.andGroups).length === 0 &&
-                            Object.keys(prereqGroups.orGroups).length === 0) {
-                            return <p className="text-gray-500 dark:text-gray-400">No
-                                prerequisites</p>;
-                        }
+                  {/*      if (prereqGroups.direct.length === 0 &&*/}
+                  {/*          Object.keys(prereqGroups.andGroups).length === 0 &&*/}
+                  {/*          Object.keys(prereqGroups.orGroups).length === 0) {*/}
+                  {/*          return <p className="text-gray-500 dark:text-gray-400">No*/}
+                  {/*              prerequisites</p>;*/}
+                  {/*      }*/}
 
-                        return (
-                          <div className="space-y-3">
-                            {prereqGroups.direct.length > 0 && (
-                              <div>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Required:</p>
-                                <ul className="list-disc pl-5 mt-1">
-                                  {prereqGroups.direct.map(courseId => (
-                                    <li key={courseId}>{courseId}</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
+                  {/*      return (*/}
+                  {/*        <div className="space-y-3">*/}
+                  {/*          {prereqGroups.direct.length > 0 && (*/}
+                  {/*            <div>*/}
+                  {/*              <p className="text-sm text-gray-500 dark:text-gray-400">Required:</p>*/}
+                  {/*              <ul className="list-disc pl-5 mt-1">*/}
+                  {/*                {prereqGroups.direct.map(courseId => (*/}
+                  {/*                  <li key={courseId}>{courseId}</li>*/}
+                  {/*                ))}*/}
+                  {/*              </ul>*/}
+                  {/*            </div>*/}
+                  {/*          )}*/}
 
-                            {Object.entries(prereqGroups.andGroups).map(([nodeId, courses]) => (
-                              <div key={nodeId}>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Must
-                                    complete all:</p>
-                                <p className="pl-5 mt-1">
-                                    {courses.join(' AND ')}
-                                </p>
-                              </div>
-                            ))}
+                  {/*          {Object.entries(prereqGroups.andGroups).map(([nodeId, courses]) => (*/}
+                  {/*            <div key={nodeId}>*/}
+                  {/*              <p className="text-sm text-gray-500 dark:text-gray-400">Must*/}
+                  {/*                  complete all:</p>*/}
+                  {/*              <p className="pl-5 mt-1">*/}
+                  {/*                  {courses.join(' AND ')}*/}
+                  {/*              </p>*/}
+                  {/*            </div>*/}
+                  {/*          ))}*/}
 
-                            {Object.entries(prereqGroups.orGroups).map(([nodeId, courses]) => (
-                              <div key={nodeId}>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Must complete one of:</p>
-                                <p className="pl-5 mt-1">
-                                  {courses.join(' OR ')}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
-                        );
-                      })()}
-                    </div>
-                  </div>
+                  {/*          {Object.entries(prereqGroups.orGroups).map(([nodeId, courses]) => (*/}
+                  {/*            <div key={nodeId}>*/}
+                  {/*              <p className="text-sm text-gray-500 dark:text-gray-400">Must complete one of:</p>*/}
+                  {/*              <p className="pl-5 mt-1">*/}
+                  {/*                {courses.join(' OR ')}*/}
+                  {/*              </p>*/}
+                  {/*            </div>*/}
+                  {/*          ))}*/}
+                  {/*        </div>*/}
+                  {/*      );*/}
+                  {/*    })()}*/}
+                  {/*  </div>*/}
+                  {/*</div>*/}
 
                   <div>
                     <h3 className={`text-lg font-semibold mb-2 ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
