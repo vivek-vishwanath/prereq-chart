@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import React, {useEffect, useRef, useState} from 'react';
+import {Card, CardContent, CardHeader, CardTitle} from './ui/card';
 import data from "../../data/course.json";
-import { fetchCourseData } from '@/lib/api';
-import type { CourseEnrollmentData } from '@/lib/api';
-import { prefetchAllCourseData, type PrefetchedData } from '@/lib/prefetch';
+import type {CourseEnrollmentData} from '@/lib/api';
+import {fetchCourseData} from '@/lib/api';
+import {prefetchAllCourseData, type PrefetchedData} from '@/lib/prefetch';
 import OnboardingModal from './OnboardingModal';
 
 type CourseType = 'intel' | 'cyber' | 'info' | 'people' | 'media' | 'theory' | 'mod-sim' | 'sys-arch' | 'devices' | 'required';
@@ -271,10 +271,10 @@ const PreReqChart = () => {
       try {
         setIsPrefetching(true);
         setPrefetchProgress(0);
-        
+
         const cached = localStorage.getItem('prefetchedData');
         let existingData: PrefetchedData | null = null;
-        
+
         if (cached) {
           const parsed = JSON.parse(cached);
           if (Date.now() - parsed.timestamp < 24 * 60 * 60 * 1000) {
@@ -282,7 +282,7 @@ const PreReqChart = () => {
           }
         }
 
-        const coursesToFetch = courses.filter(course => 
+        const coursesToFetch = courses.filter(course =>
           !existingData?.courses[course.id]
         );
 
@@ -299,7 +299,7 @@ const PreReqChart = () => {
 
         const totalToFetch = coursesToFetch.length;
         let completedCourses = 0;
-        
+
         const fetchedData = await prefetchAllCourseData(coursesToFetch, (progress) => {
           completedCourses = progress;
           const existingCount = courses.length - totalToFetch;
@@ -309,7 +309,7 @@ const PreReqChart = () => {
           console.error('Error during prefetch:', error);
           return { courses: {} };
         });
-        
+
         const mergedData: PrefetchedData = {
           timestamp: Date.now(),
           courses: {
@@ -317,10 +317,10 @@ const PreReqChart = () => {
             ...fetchedData.courses
           }
         };
-        
+
         setPrefetchedData(mergedData);
         localStorage.setItem('prefetchedData', JSON.stringify(mergedData));
-        
+
         const errors: Record<string, boolean> = {};
         courses.forEach(course => {
           if (!mergedData.courses[course.id]) {
@@ -498,7 +498,7 @@ const PreReqChart = () => {
   const handleFilterChange = (threadName: string) => {
     // Don't allow toggling of required thread
     if (threadName === 'required') return;
-    
+
     setFilters(prev => prev.map(thread => ({
       ...thread,
       show: thread.name === threadName ? !thread.show : thread.show
@@ -523,17 +523,17 @@ const PreReqChart = () => {
         const otherCourseId = p.from === course.id ? p.to : p.from;
         const otherCourse = courses.find(c => c.id === otherCourseId);
         if (!otherCourse) return false;
-        
+
         // For connected courses, check if they have any visible threads
-        return otherCourse.id.includes('*') || 
-               otherCourse.threads.some(threadName => 
+        return otherCourse.id.includes('*') ||
+               otherCourse.threads.some(threadName =>
                  filters.some(t => t.name === threadName && t.show)
                );
       });
     }
 
     // Regular course - check if any of its threads are visible
-    return course.threads.some(threadName => 
+    return course.threads.some(threadName =>
       filters.some(t => t.name === threadName && t.show)
     );
   };
@@ -549,12 +549,12 @@ const PreReqChart = () => {
   const visiblePrereqs = prereqs.filter(prereq => {
     const fromCourse = courses.find(c => c.id === prereq.from);
     const toCourse = courses.find(c => c.id === prereq.to);
-    
+
     // If either course doesn't exist, don't show the arrow
     if (!fromCourse || !toCourse) return false;
 
     // For AND/OR nodes, check if they have any visible connected courses
-    if (fromCourse.name === "AND" || fromCourse.name === "OR" || 
+    if (fromCourse.name === "AND" || fromCourse.name === "OR" ||
         toCourse.name === "AND" || toCourse.name === "OR") {
       // Only show if both connected courses are visible
       return isThreadVisible(fromCourse) && isThreadVisible(toCourse);
@@ -608,27 +608,34 @@ const PreReqChart = () => {
       // If it's an AND node (starts with &)
       if (fromCourse.id.startsWith('&')) {
         // Find all prerequisites of this AND node
-        const andPrereqs = prereqs
-          .filter(p => p.to === fromCourse.id)
-          .map(p => p.from);
-
-        prereqGroups.andGroups[fromCourse.id] = andPrereqs;
+        prereqGroups.andGroups[fromCourse.id] = prereqs
+            .filter(p => p.to === fromCourse.id)
+            .map(p => p.from);
+        for (let i = 0 ; i < prereqGroups.andGroups[fromCourse.id].length; i++) {
+          if (prereqGroups.andGroups[fromCourse.id][i].startsWith("&")) {
+            prereqGroups.andGroups[fromCourse.id].splice(i, 1);
+            let indirect = getPrerequisites(fromCourse.id);
+            for (let key in indirect.andGroups) {
+              let indirectCourses = indirect.andGroups[key]
+              for (let c in indirectCourses)
+                prereqGroups.andGroups[fromCourse.id].push(indirectCourses[c]);
+            }
+          }
+        }
       }
       // If it's an OR node (starts with |)
       else if (fromCourse.id.startsWith('|')) {
         // Find all prerequisites of this OR node
-        const orPrereqs = prereqs
-          .filter(p => p.to === fromCourse.id)
-          .map(p => p.from);
-
-        prereqGroups.orGroups[fromCourse.id] = orPrereqs;
+        prereqGroups.orGroups[fromCourse.id] = prereqs
+            .filter(p => p.to === fromCourse.id)
+            .map(p => p.from);
       }
       // Direct prerequisite
       else {
         prereqGroups.direct.push(fromCourse.id);
       }
     });
-
+    // console.log(prereqGroups)
     return prereqGroups;
   };
 
@@ -636,12 +643,12 @@ const PreReqChart = () => {
   const renderCourse = (course: Course) => {
     const isHighlighted = shouldHighlight(course.id);
     const opacity = isHighlighted ? "1" : "0.3";
-    
+
     // Special rendering for AND/OR nodes
     if (course.name === "AND" || course.name === "OR") {
       const size = 40;
       return (
-        <g 
+        <g
           key={course.id}
           style={{ transition: 'opacity 0.3s ease'}}
           opacity={opacity}
@@ -702,8 +709,8 @@ const PreReqChart = () => {
 
     // Regular course rendering
     return (
-      <g 
-        key={course.id} 
+      <g
+        key={course.id}
         onClick={() => handleCourseClick(course)}
         onMouseEnter={() => setHighlightedCourse(course.id)}
         onMouseLeave={() => setHighlightedCourse(null)}
@@ -825,7 +832,7 @@ const PreReqChart = () => {
   // Update the ThreadBubbles component
   const ThreadBubbles = () => {
     const nonRequiredThreads = filters.filter(f => f.name !== 'required');
-    
+
     const getThreadStyle = (thread: Thread) => {
       if (!(thread.name in COLORS)) {
         return {
@@ -846,7 +853,7 @@ const PreReqChart = () => {
         }
       };
     };
-    
+
     return (
       <>
         <button
@@ -861,8 +868,8 @@ const PreReqChart = () => {
           </svg>
           <span className="text-sm font-medium">Filter Threads</span>
         </button>
-        
-        <div 
+
+        <div
           className={`fixed top-32 right-4 flex flex-col gap-1.5 z-10 transition-all duration-200 items-end ${
             showBubbles ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
           }`}
@@ -887,7 +894,7 @@ const PreReqChart = () => {
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-gray-50 dark:bg-gray-900 transition-colors duration-200"
     >
       {/* Thread Bubbles */}
