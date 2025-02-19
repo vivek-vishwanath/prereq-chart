@@ -1421,7 +1421,7 @@
       "formalName": "Devices",
       "name": "devices",
       "light": {
-        "bg": "#fb923c",
+        "bg": "#007070",
         "text": "#7c2d12",
         "textSecondary": "#9a3412"
       },

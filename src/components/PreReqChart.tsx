@@ -8,7 +8,7 @@ import type { CourseEnrollmentData } from '@/lib/api';
 import { prefetchAllCourseData, type PrefetchedData } from '@/lib/prefetch';
 import OnboardingModal from './OnboardingModal';
 
-type CourseType = 'intel' | 'info' | 'people' | 'media' | 'theory' | 'mod-sim' | 'sys-arch' | 'devices' | 'required';
+type CourseType = 'intel' | 'cyber' | 'info' | 'people' | 'media' | 'theory' | 'mod-sim' | 'sys-arch' | 'devices' | 'required';
 
 interface Point {
   x: number;
@@ -84,110 +84,122 @@ type ColorScheme = {
 const COLORS: ColorScheme = {
   'required': {
     light: {
-      bg: '#fbbf24',      // Amber-400
-      text: '#78350f',    // Amber-900
-      textSecondary: '#92400e'  // Amber-800
+      bg: '#db9f04',      // Amber-400
+      text: '#FFFFFF',    // Amber-900
+      textSecondary: '#FFFFFF'  // Amber-800
     },
     dark: {
-      bg: '#78350f',      // Amber-900
-      text: '#fbbf24',    // Amber-400
-      textSecondary: '#fcd34d'  // Amber-300
+      bg: '#bb7f00',      // Amber-900
+      text: '#FFFFFF',    // Amber-400
+      textSecondary: '#FFFFFF'  // Amber-300
     }
   },
   'intel': {
     light: {
-      bg: '#34d399',      // Emerald-400
-      text: '#064e3b',    // Emerald-900
-      textSecondary: '#065f46'  // Emerald-800
+      bg: '#018dce',      // Emerald-400
+      text: '#FFFFFF',    // Emerald-900
+      textSecondary: '#FFFFFF'  // Emerald-800
     },
     dark: {
-      bg: '#064e3b',      // Emerald-900
-      text: '#34d399',    // Emerald-400
-      textSecondary: '#6ee7b7'  // Emerald-300
+      bg: '#017dbe',      // Emerald-900
+      text: '#FFFFFF',    // Emerald-400
+      textSecondary: '#FFFFFF'  // Emerald-300
     }
   },
   'info': {
     light: {
-      bg: '#fb923c',      // Orange-400
-      text: '#7c2d12',    // Orange-900
-      textSecondary: '#9a3412'  // Orange-800
+      bg: '#a1b71d',      // Orange-400
+      text: '#FFFFFF',    // Orange-900
+      textSecondary: '#FFFFFF'  // Orange-800
     },
     dark: {
-      bg: '#7c2d12',      // Orange-900
-      text: '#fb923c',    // Orange-400
-      textSecondary: '#fdba74'  // Orange-300
+      bg: '#91a70d',      // Orange-900
+      text: '#FFFFFF',    // Orange-400
+      textSecondary: '#FFFFFF'  // Orange-300
     }
   },
   'people': {
     light: {
-      bg: '#60a5fa',      // Blue-400
-      text: '#1e3a8a',    // Blue-900
-      textSecondary: '#1e40af'  // Blue-800
+      bg: '#268f3b',      // Blue-400
+      text: '#FFFFFF',    // Blue-900
+      textSecondary: '#FFFFFF'  // Blue-800
     },
     dark: {
-      bg: '#1e3a8a',      // Blue-900
-      text: '#60a5fa',    // Blue-400
-      textSecondary: '#93c5fd'  // Blue-300
+      bg: '#268f3b',      // Blue-900
+      text: '#FFFFFF',    // Blue-400
+      textSecondary: '#FFFFFF'  // Blue-300
     }
   },
   'media': {
     light: {
-      bg: '#f472b6',      // Pink-400
-      text: '#831843',    // Pink-900
-      textSecondary: '#9d174d'  // Pink-800
+      bg: '#e6820d',      // Pink-400
+      text: '#FFFFFF',    // Pink-900
+      textSecondary: '#FFFFFF'  // Pink-800
     },
     dark: {
-      bg: '#831843',      // Pink-900
-      text: '#f472b6',    // Pink-400
-      textSecondary: '#f9a8d4'  // Pink-300
+      bg: '#b6520d',      // Pink-900
+      text: '#FFFFFF',    // Pink-400
+      textSecondary: '#FFFFFF'  // Pink-300
     }
   },
   'theory': {
     light: {
-      bg: '#a78bfa',      // Purple-400
-      text: '#4c1d95',    // Purple-900
-      textSecondary: '#5b21b6'  // Purple-800
+      bg: '#0154a6',      // Purple-400
+      text: '#FFFFFF',    // Purple-900
+      textSecondary: '#FFFFFF'  // Purple-800
     },
     dark: {
-      bg: '#4c1d95',      // Purple-900
-      text: '#a78bfa',    // Purple-400
-      textSecondary: '#c4b5fd'  // Purple-300
+      bg: '#0154a6',      // Purple-900
+      text: '#FFFFFF',    // Purple-400
+      textSecondary: '#FFFFFF'  // Purple-300
     }
   },
   'mod-sim': {
     light: {
-      bg: '#2dd4bf',      // Teal-400
-      text: '#134e4a',    // Teal-900
-      textSecondary: '#115e59'  // Teal-800
+      bg: '#652c91',      // Teal-400
+      text: '#FFFFFF',    // Teal-900
+      textSecondary: '#FFFFFF'  // Teal-800
     },
     dark: {
-      bg: '#134e4a',      // Teal-900
-      text: '#2dd4bf',    // Teal-400
-      textSecondary: '#5eead4'  // Teal-300
+      bg: '#652c91',      // Teal-900
+      text: '#FFFFFF',    // Teal-400
+      textSecondary: '#FFFFFF'  // Teal-300
     }
   },
   'sys-arch': {
     light: {
-      bg: '#4ade80',      // Green-400
-      text: '#14532d',    // Green-900
-      textSecondary: '#166534'  // Green-800
+      bg: '#dc017c',      // Green-400
+      text: '#FFFFFF',    // Green-900
+      textSecondary: '#FFFFFF'  // Green-800
     },
     dark: {
-      bg: '#14532d',      // Green-900
-      text: '#4ade80',    // Green-400
-      textSecondary: '#86efac'  // Green-300
+      bg: '#dc017c',      // Green-900
+      text: '#FFFFFF',    // Green-400
+      textSecondary: '#FFFFFF'  // Green-300
     }
   },
   'devices': {
     light: {
-      bg: '#f87171',      // Red-400
-      text: '#7f1d1d',    // Red-900
-      textSecondary: '#991b1b'  // Red-800
+      bg: '#007070',      // Red-400
+      text: '#FFFFFF',    // Red-900
+      textSecondary: '#FFFFFF'  // Red-800
     },
     dark: {
-      bg: '#7f1d1d',      // Red-900
-      text: '#f87171',    // Red-400
-      textSecondary: '#fca5a5'  // Red-300
+      bg: '#007070',      // Red-900
+      text: '#FFFFFF',    // Red-400
+      textSecondary: '#FFFFFF'  // Red-300
+    }
+  },
+  'cyber': {
+    light: {
+      bg: '#54575a',      // Red-400
+      text: '#FFFFFF',    // Red-900
+      textSecondary: '#FFFFFF'  // Red-800
+    },
+    dark: {
+      bg: '#54575a',      // Red-900
+      text: '#FFFFFF',    // Red-400
+      textSecondary: '#FFFFFF'  // Red-300
     }
   }
 };
@@ -584,7 +596,7 @@ const PreReqChart = () => {
       return (
         <g 
           key={course.id}
-          style={{ transition: 'opacity 0.3s ease' }}
+          style={{ transition: 'opacity 0.3s ease'}}
           opacity={opacity}
         >
           <path
@@ -594,7 +606,7 @@ const PreReqChart = () => {
                 L ${course.x * HORIZONTAL_SPACING - size/2} ${course.y * VERTICAL_SPACING}
                 Z`}
             fill={darkMode ? "#1f2937" : "#f3f4f6"}
-            stroke={darkMode ? "#4b5563" : "#9ca3af"}
+            stroke={darkMode ? "#2b3543" : "#7c838f"}
             strokeWidth="2"
             className="transition-colors duration-200"
           />
@@ -690,7 +702,7 @@ const PreReqChart = () => {
           height={BOX_HEIGHT - ID_SECTION_HEIGHT - 10}
         >
           <div className={`text-center text-sm ${colors.textSecondary}`}
-               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+               style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#FFFFFF' }}>
             {course.name}
           </div>
         </foreignObject>
@@ -707,14 +719,14 @@ const PreReqChart = () => {
       const isHighlighted = highlightedCourse &&
         shouldHighlight(toCourse.id) &&
         shouldHighlight(fromCourse.id);
-      const opacity = !highlightedCourse || isHighlighted ? "1" : "0.1";
+      const opacity = darkMode ? (isHighlighted ? "1" : "0.5") : (isHighlighted ? "1" : "0.3")
 
       return (
         <path
           key={`arrow-${index}`}
           d={createPath(fromCourse, toCourse, prereq)}
           fill="none"
-          stroke={darkMode ? "#9ca3af" : "#666"}
+          stroke={darkMode ? (isHighlighted ? "#8c939f" : "#2c333f") : (isHighlighted ? "#333" : "#999") }
           strokeWidth="3"
           markerEnd="url(#arrowhead)"
           style={{ transition: 'opacity 0.3s ease' }}
@@ -1022,7 +1034,7 @@ const PreReqChart = () => {
               ,{' '}
               <a href="https://www.linkedin.com/in/vivek-vishwanath1/" target="_blank" rel="noopener noreferrer"
                  className={`underline ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'}`}>
-                Vivek
+                Vivek Vishwanath
               </a>
               , and{' '}
               <a href="https://www.linkedin.com/in/davehday/" target="_blank" rel="noopener noreferrer"
