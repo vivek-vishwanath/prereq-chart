@@ -117,7 +117,13 @@
       "x": "5",
       "y": "6",
       "threads": [
-        "required"
+        "mod-sim",
+        "theory",
+        "intel",
+        "devices",
+        "sys-arch",
+        "cyber",
+        "info"
       ]
     },
     {
@@ -319,7 +325,8 @@
       "x": "10",
       "y": "12",
       "threads": [
-        "intel"
+        "intel",
+        "devices"
       ]
     },
     {
@@ -380,16 +387,6 @@
       "short_name": "Animation",
       "x": "6",
       "y": "11",
-      "threads": [
-        "media"
-      ]
-    },
-    {
-      "id": "CS 4475",
-      "name": "",
-      "short_name": "",
-      "x": "5",
-      "y": "12",
       "threads": [
         "media"
       ]
@@ -472,15 +469,16 @@
       "x": "9",
       "y": "14",
       "threads": [
-        "people"
+        "people",
+        "intel"
       ]
     },
     {
       "id": "CS 3750",
       "name": "Intro to UI Design",
-      "short_name": "",
-      "x": "5",
-      "y": "15",
+      "short_name": "UI Design",
+      "x": "4",
+      "y": "16",
       "threads": [
         "people"
       ]
@@ -502,7 +500,8 @@
       "x": "9",
       "y": "15",
       "threads": [
-        "people"
+        "people",
+        "intel"
       ]
     },
     {
@@ -543,7 +542,6 @@
       "x": "2",
       "y": "13",
       "threads": [
-        "people",
         "media"
       ]
     },
@@ -560,7 +558,9 @@
         "devices",
         "sys-arch",
         "cyber",
-        "info"
+        "info",
+        "people",
+        "media"
       ]
     },
     {
@@ -571,6 +571,26 @@
       "y": "17",
       "threads": [
         "devices",
+        "sys-arch"
+      ]
+    },
+    {
+      "id": "CS 3300",
+      "name": "Intro to Software Engr",
+      "short_name": "",
+      "x": "5",
+      "y": "18",
+      "threads": [
+        "sys-arch"
+      ]
+    },
+    {
+      "id": "CS 4240",
+      "name": "Compilers & Interpreters",
+      "short_name": "",
+      "x": "5",
+      "y": "19.5",
+      "threads": [
         "sys-arch"
       ]
     },
@@ -655,7 +675,9 @@
       "x": "8",
       "y": "22",
       "threads": [
-        "info"
+        "info",
+        "devices",
+        "cyber"
       ]
     },
     {
@@ -665,7 +687,8 @@
       "x": "8",
       "y": "24",
       "threads": [
-        "info"
+        "info",
+        "cyber"
       ]
     },
     {
@@ -685,7 +708,8 @@
       "x": "10",
       "y": "17",
       "threads": [
-        "info"
+        "info",
+        "devices"
       ]
     },
     {
@@ -735,7 +759,8 @@
       "x": "10",
       "y": "23",
       "threads": [
-        "info"
+        "info",
+        "cyber"
       ]
     },
     {
@@ -927,6 +952,146 @@
       "threads": [
         ""
       ]
+    },
+    {
+      "id": "CS 4255",
+      "name": "Industrial Control Systems Security",
+      "short_name": "ICS Security",
+      "x": "9",
+      "y": "22",
+      "threads": [
+        "info"
+      ]
+    },
+    {
+      "id": "CS 4265",
+      "name": "Information Security Lab",
+      "short_name": "Info Sec Lab",
+      "x": "9",
+      "y": "26",
+      "threads": [
+        "cyber"
+      ]
+    },
+    {
+      "id": "CS 4267",
+      "name": "Defensive Computer Security",
+      "short_name": "Defensive Security",
+      "x": "10",
+      "y": "26",
+      "threads": [
+        "cyber"
+      ]
+    },
+    {
+      "id": "CS 4270",
+      "name": "Data Communications Laboratory",
+      "short_name": "Data Comm Lab",
+      "x": "9",
+      "y": "23",
+      "threads": [
+        "info"
+      ]
+    },
+    {
+      "id": "CS 4464",
+      "name": "Computational Journalism",
+      "short_name": "Comp Journalism",
+      "x": "7",
+      "y": "13",
+      "threads": [
+        "media"
+      ]
+    },
+    {
+      "id": "CS 4475",
+      "name": "Computational Photography",
+      "short_name": "Comp Photography",
+      "x": "7",
+      "y": "14",
+      "threads": [
+        "media"
+      ]
+    },
+    {
+      "id": "CS 3751",
+      "name": "Human-Computer Interaction",
+      "short_name": "HCI",
+      "x": "4",
+      "y": "15",
+      "threads": [
+        "people"
+      ]
+    },
+    {
+      "id": "CS 4472",
+      "name": "Design of Online Communities",
+      "short_name": "Online Communities",
+      "x": "9",
+      "y": "13",
+      "threads": [
+        "people"
+      ]
+    },
+    {
+      "id": "CS 4646",
+      "name": "Machine Learning for Trading",
+      "short_name": "ML for Trading",
+      "x": "9",
+      "y": "11",
+      "threads": [
+        "intel"
+      ]
+    },
+    {
+      "id": "CS 4649",
+      "name": "Robot Intelligence",
+      "short_name": "Robot Intel",
+      "x": "9",
+      "y": "12",
+      "threads": [
+        "intel"
+      ]
+    },
+    {
+      "id": "CS 4462",
+      "name": "Theory and Design of User Interfaces",
+      "short_name": "UI Theory & Design",
+      "x": "6",
+      "y": "15",
+      "threads": [
+        "people"
+      ]
+    },
+    {
+      "id": "|5",
+      "name": "OR",
+      "short_name": "",
+      "x": "5",
+      "y": "15",
+      "threads": [
+        ""
+      ]
+    },
+    {
+      "id": "&7",
+      "name": "AND",
+      "short_name": "",
+      "x": "5.5",
+      "y": "14",
+      "threads": [
+        ""
+      ]
+    },
+    {
+      "id": "|6",
+      "name": "OR",
+      "short_name": "",
+      "x": "3",
+      "y": "13",
+      "threads": [
+        ""
+      ]
     }
   ],
   "prereqs": [
@@ -1034,7 +1199,9 @@
     },
     {
       "from": "CS 3510",
-      "to": "MATH 4150"
+      "to": "MATH 4150",
+      "fromSide": "right",
+      "toSide": "left"
     },
     {
       "from": "CS 3510",
@@ -1051,10 +1218,6 @@
     {
       "from": "CS 1301",
       "to": "CS 1331"
-    },
-    {
-      "from": "CS 1301",
-      "to": "CS 4475"
     },
     {
       "from": "CS 1301",
@@ -1117,10 +1280,6 @@
       "to": "CS 4420"
     },
     {
-      "from": "CS 1332",
-      "to": "CS 4240"
-    },
-    {
       "from": "&5",
       "to": "&6"
     },
@@ -1149,12 +1308,20 @@
       "to": "CS 3300"
     },
     {
+      "from": "CS 2340",
+      "to": "&7"
+    },
+    {
+      "from": "CS 2340",
+      "to": "&5"
+    },
+    {
       "from": "CS 3451",
       "to": "CS 4455"
     },
     {
       "from": "CS 3451",
-      "to": "CS 4455"
+      "to": "CS 4496"
     },
     {
       "from": "&4",
@@ -1166,18 +1333,6 @@
     },
     {
       "from": "CS 2261",
-      "to": "|2"
-    },
-    {
-      "from": "|2",
-      "to": "CS 3451"
-    },
-    {
-      "from": "CS 3750",
-      "to": "CS 4470"
-    },
-    {
-      "from": "CS 2110",
       "to": "|2"
     },
     {
@@ -1213,6 +1368,10 @@
       "to": "CS 3220"
     },
     {
+      "from": "ECE 2031",
+      "to": "CS 3651"
+    },
+    {
       "from": "CS 4400",
       "to": "CS 4420"
     },
@@ -1237,8 +1396,8 @@
       "to": "CS 4210"
     },
     {
-      "from": "CS 2200",
-      "to": "CS 4240"
+      "from": "CS 3210",
+      "to": "CS 4238"
     },
     {
       "from": "CS 2200",
@@ -1247,14 +1406,6 @@
     {
       "from": "CS 2200",
       "to": "CS 3210"
-    },
-    {
-      "from": "CS 2200",
-      "to": "CS 4220"
-    },
-    {
-      "from": "CS 2200",
-      "to": "CS 4290"
     },
     {
       "from": "CS 2200",
@@ -1297,8 +1448,16 @@
       "to": "CS 4262"
     },
     {
+      "from": "CS 3251",
+      "to": "CS 4251"
+    },
+    {
       "from": "CS 3235",
       "to": "CS 4243"
+    },
+    {
+      "from": "CS 3235",
+      "to": "|4"
     },
     {
       "from": "CS 3237",
@@ -1311,6 +1470,106 @@
     {
       "from": "|4",
       "to": "CS 4239"
+    },
+    {
+      "from": "CS 1332",
+      "to": "CS 4460"
+    },
+    {
+      "from": "CS 2340",
+      "to": "CS 4240"
+    },
+    {
+      "from": "MATH 1554",
+      "to": "CS 4476"
+    },
+    {
+      "from": "MATH 2550",
+      "to": "CS 4476"
+    },
+    {
+      "from": "ECE 2031", 
+      "to": "ECE 4180"
+    },
+    {
+      "from": "CS 3235",
+      "to": "CS 4265"
+    },
+    {
+      "from": "CS 3235",
+      "to": "CS 4267"
+    },
+    {
+      "from": "CS 3251",
+      "to": "CS 4270"
+    },
+    {
+      "from": "CS 1332",
+      "to": "CS 4464"
+    },
+    {
+      "from": "CS 1332",
+      "to": "CS 4475"
+    },
+    {
+      "from": "CS 3630",
+      "to": "CS 4649"
+    },
+    {
+      "from": "CS 3600",
+      "to": "CS 4649"
+    },
+    {
+      "from": "CS 3600",
+      "to": "CS 4646"
+    },
+    {
+      "from": "CS 4641",
+      "to": "CS 4646"
+    },
+    {
+      "from": "CS 3750",
+      "to": "CS 4472"
+    },
+    {
+      "from": "CS 1332",
+      "to": "CS 4462"
+    },
+    {
+      "from": "|2",
+      "to": "CS 3451"
+    },
+    {
+      "from": "CS 2110",
+      "to": "|2"
+    },
+    {
+      "from": "CS 3751",
+      "to": "|5"
+    },
+    {
+      "from": "CS 3750",
+      "to": "|5"
+    },
+    {
+      "from": "&7",
+      "to": "CS 4470"
+    },
+    {
+      "from": "|5",
+      "to": "&7"
+    },
+    {
+      "from": "CS 2110",
+      "to": "|6"
+    },
+    {
+      "from": "CS 2261", 
+      "to": "|6"
+    },
+    {
+      "from": "|6",
+      "to": "CS 4488"
     }
   ],
   "threads": [
